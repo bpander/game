@@ -1,0 +1,8 @@
+{
+  "name": "game",
+  "private": true,
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}

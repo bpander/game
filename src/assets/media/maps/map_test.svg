@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 15">
+  <g id="Rooms">
+    <rect x="8" width="7" height="3"/>
+    <rect x="8" y="4" width="7" height="3"/>
+    <rect x="16" y="8" width="3" height="7"/>
+    <rect x="20" y="8" width="3" height="7"/>
+    <rect x="16" width="7" height="7"/>
+    <rect x="8" y="8" width="7" height="7"/>
+    <rect y="8" width="7" height="3"/>
+    <rect y="12" width="7" height="3"/>
+  </g>
+  <g id="Doors">
+    <rect x="15" width="1" height="3"/>
+    <rect x="15" y="4" width="1" height="3"/>
+    <rect x="15" y="12" width="1" height="3"/>
+    <rect x="19" y="12" width="1" height="3"/>
+    <rect x="8" y="3" width="3" height="1"/>
+    <rect x="8" y="7" width="3" height="1"/>
+    <rect x="7" y="8" width="1" height="3"/>
+    <rect x="7" y="12" width="1" height="3"/>
+    <rect y="11" width="3" height="1"/>
+    <rect x="16" y="7" width="3" height="1"/>
+    <rect x="20" y="7" width="3" height="1"/>
+  </g>
+</svg>

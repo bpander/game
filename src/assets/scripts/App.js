@@ -1,4 +1,6 @@
 import preact from 'preact';
+import Map from 'components/Map';
+
 
 /**
  * Application setup
@@ -14,7 +16,12 @@ export default class App extends preact.Component {
 
   render() {
     return (
-      <div>Cupcakes.</div>
+      <div>
+        Cupcakes.
+        <Map src="assets/media/maps/map_test.svg">
+          <div>test child</div>
+        </Map>
+      </div>
     );
   }
 }

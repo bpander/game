@@ -1,4 +1,3 @@
-import $ from 'jquery';
 
 /**
  * Application setup
@@ -6,7 +5,7 @@ import $ from 'jquery';
  * @class App
  */
 export default class App {
-    constructor() {
-        $('.js-welcome').text('Welcome to the client-side boilerplate!');
-    }
+  constructor() {
+    console.log('app started');
+  }
 }

@@ -182,7 +182,7 @@
     # WHITESPACE <https://github.com/thenerdery/javascript-standards#whitespace>
     ###############################################################################################
 
-    "indent": [2, 4, {"SwitchCase": 1}],          # Require 4-space indents
+    "indent": [2, 2, {"SwitchCase": 1}],          # Require 4-space indents
     "space-before-blocks": [2, "always"],         # Require space before blocks
     "space-infix-ops": 2,                         # Require spaces around infix operators
     "newline-per-chained-call": [2, {             # Require newline per chained method call

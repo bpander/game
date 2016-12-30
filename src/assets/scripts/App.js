@@ -16,11 +16,13 @@ export default class App extends preact.Component {
 
   render() {
     return (
-      <div>
-        Cupcakes.
-        <Map src="assets/media/maps/map_test.svg">
-          <div>test child</div>
-        </Map>
+      <div className="aspectRatio aspectRatio_16by9">
+        <div className="aspectRatio-content">
+          Cupcakes.
+          <Map src="assets/media/maps/map_test.svg">
+            <div>test child</div>
+          </Map>
+        </div>
       </div>
     );
   }

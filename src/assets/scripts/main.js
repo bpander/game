@@ -4,4 +4,4 @@ import App from 'App';
 
 
 const appNode = document.getElementById('js-app');
-window.app = preact.render(<App />, appNode);
+preact.render(<App ref={app => window.app = app} />, appNode);

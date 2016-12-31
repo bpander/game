@@ -14,18 +14,6 @@ export default class Board extends preact.Component {
     data: null,
   };
 
-  componentDidMount() {
-    // TODO: the svg should be passed in as a prop
-    fetch(this.props.src)
-      .then(response => response.text())
-      .then(svgString => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(svgString, 'image/svg+xml');
-        const svg = doc.firstElementChild;
-        this.setState({ data: svg });
-      });
-  }
-
   render() {
     const { data } = this.state;
     if (!data) {

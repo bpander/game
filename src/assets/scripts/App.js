@@ -1,7 +1,7 @@
 import preact from 'preact';
 import { connect } from 'preact-redux';
 import { bindActionCreators } from 'redux';
-import * as factionActions from 'actions/factionActions';
+import * as actions from 'actions/actions';
 import Board from 'svgComponents/Board';
 import SvgRenderer from 'engine/SvgRenderer';
 import UiLayer from 'engine/UiLayer';
@@ -19,12 +19,16 @@ class App extends preact.Component {
     factions: [],
   };
 
+  componentDidMount() {
+    this.props.actions.fetchBoard('assets/media/maps/map_test.svg');
+  }
+
   render() {
     const { actions } = this.props;
     return (
       <div>
         <SvgRenderer x="0" y="0" width="800" height="450">
-          <Board src="assets/media/maps/map_test.svg" x="20" y="20" size="20" actions={actions} />
+          <Board x="20" y="20" size="20" actions={actions} />
         </SvgRenderer>
         <UiLayer>
         </UiLayer>
@@ -38,7 +42,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(factionActions, dispatch),
+  actions: bindActionCreators(actions, dispatch),
 });
 
 export default connect(

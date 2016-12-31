@@ -1,12 +1,21 @@
 import preact from 'preact';
+import Grid from 'svgComponents/Grid';
+
 
 export default class Board extends preact.Component {
+
+  static defaultProps = {
+    x: 0,
+    y: 0,
+    size: 1,
+  };
 
   state = {
     data: null,
   };
 
   componentDidMount() {
+    // TODO: the svg should be passed in as a prop
     fetch(this.props.src)
       .then(response => response.text())
       .then(svgString => {
@@ -17,30 +26,18 @@ export default class Board extends preact.Component {
       });
   }
 
-  renderBoard() {
-    const { data } = this.state;
-    return (
-      <div>
-        Width: {data.viewBox.baseVal.width}
-        <br/>
-        Height: {data.viewBox.baseVal.height}
-        {this.props.children}
-      </div>
-    );
-  }
-
   render() {
     const { data } = this.state;
+    if (!data) {
+      return;
+    }
+
+    const { width, height } = data.viewBox.baseVal;
+    const { x, y, size } = this.props;
     return (
-      <div>
-        {(!data) ? (
-          <div>
-            {this.props.src}
-          </div>
-        ) : (
-          this.renderBoard()
-        )}
-      </div>
+      <g transform={`translate(${x}, ${y})`}>
+        <Grid width={width} height={height} size={size} />
+      </g>
     );
   }
 }

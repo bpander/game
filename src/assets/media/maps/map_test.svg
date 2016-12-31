@@ -14,12 +14,12 @@
     <rect x="15" y="4" width="1" height="3"/>
     <rect x="15" y="12" width="1" height="3"/>
     <rect x="19" y="12" width="1" height="3"/>
-    <rect x="8" y="3" width="3" height="1"/>
+    <!-- <rect x="8" y="3" width="3" height="1"/> -->
     <rect x="8" y="7" width="3" height="1"/>
-    <rect x="7" y="8" width="1" height="3"/>
+    <!-- <rect x="7" y="8" width="1" height="3"/> -->
     <rect x="7" y="12" width="1" height="3"/>
-    <rect y="11" width="3" height="1"/>
+    <!-- <rect y="11" width="3" height="1"/> -->
     <rect x="16" y="7" width="3" height="1"/>
-    <rect x="20" y="7" width="3" height="1"/>
+    <!-- <rect x="20" y="7" width="3" height="1"/> -->
   </g>
 </svg>

@@ -1,6 +1,6 @@
 import preact from 'preact';
 
-export default class Map extends preact.Component {
+export default class Board extends preact.Component {
 
   state = {
     data: null,
@@ -17,7 +17,7 @@ export default class Map extends preact.Component {
       });
   }
 
-  renderMap() {
+  renderBoard() {
     const { data } = this.state;
     return (
       <div>
@@ -38,7 +38,7 @@ export default class Map extends preact.Component {
             {this.props.src}
           </div>
         ) : (
-          this.renderMap()
+          this.renderBoard()
         )}
       </div>
     );

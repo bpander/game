@@ -1,5 +1,7 @@
 import preact from 'preact';
 import Board from 'components/Board';
+import SvgRenderer from 'engine/SvgRenderer';
+import UiLayer from 'engine/UiLayer';
 
 
 /**
@@ -9,8 +11,6 @@ import Board from 'components/Board';
  */
 export default class App extends preact.Component {
 
-  static aspectRatio = screen.width / screen.height;
-
   constructor(props) {
     super(props);
     console.log('app started');
@@ -18,13 +18,12 @@ export default class App extends preact.Component {
 
   render() {
     return (
-      <div className="aspectRatio" style={{ paddingBottom: `${1 / App.aspectRatio * 100}%` }}>
-        <div className="aspectRatio-content">
-          Cupcakes.
-          <Board src="assets/media/maps/map_test.svg">
-            <div>test child</div>
-          </Board>
-        </div>
+      <div>
+        <SvgRenderer x="0" y="0" width="800" height="450">
+          <Board src="assets/media/maps/map_test.svg" />
+        </SvgRenderer>
+        <UiLayer>
+        </UiLayer>
       </div>
     );
   }

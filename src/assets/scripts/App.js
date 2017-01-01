@@ -18,8 +18,27 @@ class App extends preact.Component {
     board: null,
   };
 
+  onAnimationFrame = timestamp => {
+    this.step(timestamp - this.previousTimestamp);
+    this.previousTimestamp = timestamp;
+  };
+
+  afRequestId = -1;
+
+  previousTimestamp = -1;
+
   componentDidMount() {
     this.props.actions.fetchBoard('assets/media/maps/map_test.svg');
+    this.step();
+  }
+
+  step(ms = 17) {
+    this.props.actions.step(ms);
+    this.afRequestId = requestAnimationFrame(this.onAnimationFrame);
+  }
+
+  stop() {
+    cancelAnimationFrame(this.afRequestId);
   }
 
   render() {

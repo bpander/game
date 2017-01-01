@@ -1,5 +1,7 @@
 import * as ActionTypes from 'constants/ActionTypes';
 
+export const step = ms => ({ type: ActionTypes.STEP, ms });
+
 const fillRect = (board, { x, y, width, height }, fillValue) => {
   const { grid } = board;
   const top = y;
@@ -15,7 +17,7 @@ const fillRect = (board, { x, y, width, height }, fillValue) => {
   return board;
 };
 
-export const fetchBoard = (src) => dispatch => {
+export const fetchBoard = src => dispatch => {
   return fetch(src)
     .then(response => response.text())
     .then(svgString => {

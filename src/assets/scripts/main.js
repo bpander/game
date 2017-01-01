@@ -11,7 +11,7 @@ const store = createStore(reducer, applyMiddleware(thunkMiddleware));
 const appNode = document.getElementById('js-app');
 preact.render(
   <Provider store={store}>
-    <App ref={app => window.app = app} />
+    <App ref={connection => window.connection = connection} />
   </Provider>,
   appNode
 );

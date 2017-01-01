@@ -14,9 +14,8 @@ import UiLayer from 'engine/UiLayer';
  */
 class App extends preact.Component {
 
-  state = {
+  static defaultProps = {
     board: null,
-    factions: [],
   };
 
   componentDidMount() {
@@ -24,11 +23,13 @@ class App extends preact.Component {
   }
 
   render() {
-    const { actions } = this.props;
+    const { actions, board } = this.props;
     return (
       <div>
         <SvgRenderer x="0" y="0" width="800" height="450">
-          <Board x="20" y="20" size="20" actions={actions} />
+          {(board) && (
+            <Board x="20" y="20" size="24" {...board} actions={actions} />
+          )}
         </SvgRenderer>
         <UiLayer>
         </UiLayer>
@@ -38,7 +39,7 @@ class App extends preact.Component {
 }
 
 const mapStateToProps = state => ({
-  factions: state.factions,
+  board: state.board,
 });
 
 const mapDispatchToProps = dispatch => ({

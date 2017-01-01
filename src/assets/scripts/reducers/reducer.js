@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import factions from 'reducers/factions';
+import board from 'reducers/board';
 
 const reducer = combineReducers({
-  factions,
+  board,
 });
 
 export default reducer;

@@ -15,7 +15,17 @@ export default class Board extends preact.Component {
   };
 
   onClick = e => {
-    this.props.actions.moveSelectedTo(12, 3);
+    const { size } = this.props;
+    const svg = e.currentTarget.ownerSVGElement;
+    const svgRect = svg.getBoundingClientRect();
+    const targetRect = e.currentTarget.getBoundingClientRect();
+    const scale = svgRect.width / svg.viewBox.baseVal.width;
+    const localX = e.clientX - svgRect.left - targetRect.left;
+    const localY = e.clientY - svgRect.top - targetRect.top;
+    const scaledSize = size * scale;
+    const gridX = localX / scaledSize | 0;
+    const gridY = localY / scaledSize | 0;
+    this.props.actions.moveSelectedTo(gridX, gridY);
   };
 
   shouldComponentUpdate(nextProps, nextState) {

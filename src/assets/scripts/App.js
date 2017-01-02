@@ -32,7 +32,10 @@ class App extends preact.Component {
   componentDidMount() {
     this.props.actions.fetchBoard('assets/media/maps/map_test.svg');
     this.props.actions.addEntity({
-      position: [10, 1],
+      isSelected: true,
+      position: [1, 1],
+      speed: 20, // grid squares per second
+      state: 'idle',
     });
     this.step();
   }
@@ -56,10 +59,10 @@ class App extends preact.Component {
           )}
           {entities.map(entity => (
             <circle
-              cx={entity.position[0] * size}
-              cy={entity.position[1] * size}
+              cx={size * entity.position[0]}
+              cy={size * entity.position[1]}
               r={size / 2 * 0.8}
-              fill="dodgerblue"
+              fill={(entity.state === 'walking') ? 'blue' : 'dodgerblue'}
             />
           ))}
         </SvgRenderer>

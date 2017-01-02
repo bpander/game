@@ -14,6 +14,10 @@ export default class Board extends preact.Component {
     isDirty: false,
   };
 
+  onClick = e => {
+    this.props.actions.moveSelectedTo(12, 3);
+  };
+
   shouldComponentUpdate(nextProps, nextState) {
     return nextProps.isDirty;
   }
@@ -44,6 +48,7 @@ export default class Board extends preact.Component {
           })}
         </g>
         <Grid width={width} height={height} size={size} />
+        <rect opacity="0" width={width * size} height={height * size} onClick={this.onClick} />
       </g>
     );
   }

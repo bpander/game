@@ -16,6 +16,8 @@ class App extends preact.Component {
 
   static defaultProps = {
     board: null,
+    entities: [],
+    size: 24,
   };
 
   onAnimationFrame = timestamp => {
@@ -29,6 +31,9 @@ class App extends preact.Component {
 
   componentDidMount() {
     this.props.actions.fetchBoard('assets/media/maps/map_test.svg');
+    this.props.actions.addEntity({
+      position: [10, 1],
+    });
     this.step();
   }
 
@@ -42,13 +47,21 @@ class App extends preact.Component {
   }
 
   render() {
-    const { actions, board } = this.props;
+    const { actions, board, entities, size } = this.props;
     return (
       <div>
-        <SvgRenderer x="0" y="0" width="800" height="450">
+        <SvgRenderer x="-20" y="-20" width="800" height="450">
           {(board) && (
-            <Board x="20" y="20" size="24" {...board} actions={actions} />
+            <Board size={size} {...board} actions={actions} />
           )}
+          {entities.map(entity => (
+            <circle
+              cx={entity.position[0] * size}
+              cy={entity.position[1] * size}
+              r={size / 2 * 0.8}
+              fill="dodgerblue"
+            />
+          ))}
         </SvgRenderer>
         <UiLayer>
         </UiLayer>
@@ -59,6 +72,7 @@ class App extends preact.Component {
 
 const mapStateToProps = state => ({
   board: state.board,
+  entities: state.entities,
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -21,9 +21,10 @@ export default class Board extends preact.Component {
   render() {
     console.log('Board#render');
     const { x, y, width, height, grid, size } = this.props;
+    const offset = size / 2 * -1;
 
     return (
-      <g transform={`translate(${x}, ${y})`}>
+      <g transform={`translate(${x + offset}, ${y + offset})`}>
         <g opacity="0.2">
           {grid.map((cell, i) => {
             if (cell < 1) {

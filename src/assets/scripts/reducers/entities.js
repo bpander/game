@@ -8,13 +8,6 @@ const entities = (state = [], action) => {
       state.push(action.entity);
       break;
 
-    case ActionTypes.MOVE_SELECTED_TO:
-      state.filter(entity => entity.isSelected).forEach(entity => {
-        entity.target = action.position;
-        entity.state = 'walking';
-      });
-      break;
-
     case ActionTypes.STEP:
       return state.map(entity => {
         if (entity.state === 'walking') {

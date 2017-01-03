@@ -83,14 +83,18 @@ export default function findPath(board, [startX, startY], [finalX, finalY]) {
         return;
       }
 
-      const tentativeGScore = getGScoreTo(board, current, neighbor);
-      if (!openSet.includes(neighbor)) {
-        openSet.push(neighbor);
-      } else if (tentativeGScore >= gScore[neighbor]) {
+      if (openSet.includes(neighbor)) {
+        const gScoreOld = gScore[current] + getGScoreTo(board, neighbor, current);
+        const gScoreNew = gScore[cameFrom[current]] + getGScoreTo(board, neighbor, cameFrom[current]);
+        if (gScoreNew > gScoreOld) {
+          cameFrom[neighbor] = cameFrom[current];
+          gScore[neighbor] = gScoreNew;
+        }
         return;
       }
+      openSet.push(neighbor);
       cameFrom[neighbor] = current;
-      gScore[neighbor] = tentativeGScore;
+      gScore[neighbor] = gScore[cameFrom[neighbor]] + getGScoreTo(board, neighbor, current);
     });
   }
 

@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import * as ActionTypes from 'constants/ActionTypes.js';
+import findPath from 'lib/findPath';
 import board from 'reducers/board';
 import entities from 'reducers/entities';
 
@@ -18,7 +19,9 @@ const reducer = (state = initialState, action) => {
 
     case ActionTypes.MOVE_SELECTED_TO:
       state.entities.filter(entity => entity.isSelected).forEach(entity => {
-        entity.target = action.position;
+        const { position } = entity;
+        const start = position.map(Math.floor);
+        entity.path = findPath(state.board, start, action.position);
         entity.state = 'walking';
       });
       break;

@@ -33,8 +33,9 @@ class App extends preact.Component {
     this.props.actions.fetchBoard('assets/media/maps/map_test.svg');
     this.props.actions.addEntity({
       isSelected: true,
+      path: [],
       position: [10, 1],
-      speed: 20, // grid squares per second
+      speed: 10, // grid squares per second
       state: 'idle',
     });
     this.step();

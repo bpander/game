@@ -11,7 +11,7 @@ const getLowestIndex = arr => {
 };
 
 const getIndex = (board, x, y) => {
-  if (x < 0 || y < 0 || x > board.width || y > board.height) {
+  if (x < 0 || y < 0 || x >= board.width || y >= board.height) {
     return;
   }
   return y * board.width + x;

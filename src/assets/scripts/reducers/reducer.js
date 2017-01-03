@@ -21,7 +21,11 @@ const reducer = (state = initialState, action) => {
       state.entities.filter(entity => entity.isSelected).forEach(entity => {
         const { position } = entity;
         const start = position.map(Math.floor);
-        entity.path = findPath(state.board, start, action.position);
+        const path = findPath(state.board, start, action.position);
+        if (!path) {
+          return;
+        }
+        entity.path = path;
         entity.state = 'walking';
       });
       break;

@@ -98,6 +98,9 @@ export default function findPath(board, [startX, startY], [finalX, finalY]) {
     });
   }
 
+  if (!cameFrom[final]) {
+    return null;
+  }
   const path = [ getXY(board, final) ];
   let current = final;
   while ((current = cameFrom[current]) != null) {

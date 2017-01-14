@@ -34,7 +34,7 @@ class App extends preact.Component {
       isSelected: true,
       path: [],
       position: [100, 100],
-      speed: 10, // grid squares per second
+      speed: 500, // pixels per second
       state: 'idle',
     });
     this.step();

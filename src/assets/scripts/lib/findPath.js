@@ -67,6 +67,17 @@ const getNeighbors = (board, i) => {
   return neighbors;
 };
 
+const getDistance = (start, final) => {
+  return Math.sqrt(
+    Math.pow(final[0] - start[0], 2) + Math.pow(final[1] - start[1], 2)
+  );
+};
+
+const getManhattanDistance = (start, final) => {
+  return Math.abs(final[0] - start[0]) + Math.abs(final[1] - start[1]);
+};
+
+
 /**
  * An A* pathfinding function. Adapted from
  * https://en.wikipedia.org/wiki/A*_search_algorithm#Pseudocode
@@ -77,56 +88,78 @@ const getNeighbors = (board, i) => {
  * @param  {Vector2}  goal    The goal coordinate.
  * @return {Array<Vector2>}   An array of coordinates connecting the start with the goal.
  */
-export default function findPath(navMesh, start, final) {
-  const { points, triangles } = navMesh;
+export default function findPath(navMesh, start, final, heuristicFn = getManhattanDistance) {
+  const { points, triangles, neighbors } = navMesh;
   const polygons = triangles.map(triangle => triangle.map(i => points[i]));
+  // TODO: Optimize point-in-polygon test
+  // http://stackoverflow.com/questions/217578/how-can-i-determine-whether-a-2d-point-is-within-a-polygon
   const startTriIndex = polygons.findIndex(polygon => isPointInPolygon(start, polygon));
   const finalTriIndex = polygons.findIndex(polygon => isPointInPolygon(final, polygon));
-  console.log(polygons[startTriIndex]);
-  console.log(polygons[finalTriIndex]);
-  return;
+  if (startTriIndex === finalTriIndex) {
+    return [ start, final ];
+  }
+  const nodes = [ ...points, start, final ];
+  const edges = neighbors.map(neighbor => Object.assign({}, neighbor));
+  const startPointIndex = nodes.length - 2;
+  const finalPointIndex = startPointIndex + 1;
+  edges[startPointIndex] = {};
+  edges[finalPointIndex] = {};
+  triangles[startTriIndex].forEach(pointIndex => {
+    const d = getDistance(points[pointIndex], start);
+    edges[startPointIndex][pointIndex] = d;
+    edges[pointIndex][startPointIndex] = d;
+  });
+  triangles[finalTriIndex].forEach(pointIndex => {
+    const d = getDistance(points[pointIndex], final);
+    edges[finalPointIndex][pointIndex] = d;
+    edges[pointIndex][finalPointIndex] = d;
+  });
+
   const closedSet = [];
-  const openSet = [ start ];
+  const openSet = [ startPointIndex ];
   const cameFrom = [];
 
-  const gScore = Array(board.grid.length).fill(Infinity);
-  gScore[start] = 0;
+  const gScore = Array(nodes.length).fill(Infinity);
+  gScore[startPointIndex] = 0;
+
+  const fScore = Array(nodes.length).fill(Infinity);
+  fScore[startPointIndex] = heuristicFn(nodes[startPointIndex], nodes[finalPointIndex]);
+
+  const fScoreComparator = (a, b) => fScore[a] - fScore[b];
 
   while (openSet.length > 0) {
-    const current = openSet.sort(gScoreComparator)[0];
-    if (current === final) {
+    const current = openSet.sort(fScoreComparator)[0];
+    if (current === finalPointIndex) {
       break;
     }
     openSet.splice(openSet.indexOf(current), 1);
     closedSet.push(current);
-    getNeighbors(board, current).forEach(neighbor => {
-      const isWalkable = board.grid[neighbor] > 0; // TODO: Use a bitmask
-      if (!isWalkable || closedSet.includes(neighbor)) {
-        return;
+    for (const neighborKey in edges[current]) {
+      const neighborIndex = +neighborKey;
+      if (closedSet.includes(neighborIndex)) {
+        continue;
       }
-
-      if (openSet.includes(neighbor)) {
-        const gScoreOld = gScore[current] + getGScoreTo(board, neighbor, current);
-        const gScoreNew = gScore[cameFrom[current]] + getGScoreTo(board, neighbor, cameFrom[current]);
-        if (gScoreNew > gScoreOld) {
-          cameFrom[neighbor] = cameFrom[current];
-          gScore[neighbor] = gScoreNew;
-        }
-        return;
+      const tentativeGScore = gScore[current] + edges[current][neighborIndex];
+      if (!openSet.includes(neighborIndex)) { // Discover a new node
+        openSet.push(neighborIndex);
+      } else if (tentativeGScore >= gScore[neighborIndex]) {
+        continue; // This is not a better path.
       }
-      openSet.push(neighbor);
-      cameFrom[neighbor] = current;
-      gScore[neighbor] = gScore[cameFrom[neighbor]] + getGScoreTo(board, neighbor, current);
-    });
+      // This path is the best until now. Record it!
+      cameFrom[neighborIndex] = current;
+      gScore[neighborIndex] = tentativeGScore;
+      fScore[neighborIndex] = gScore[neighborIndex] + heuristicFn(nodes[neighborIndex], final);
+    }
   }
 
-  if (!cameFrom[final]) {
+  if (!cameFrom[finalPointIndex]) {
     return null;
   }
-  const path = [ getXY(board, final) ];
-  let current = final;
+  const path = [ finalPointIndex ];
+  let current = finalPointIndex;
   while ((current = cameFrom[current]) != null) {
-    path.unshift(getXY(board, current));
+    path.unshift(current);
   }
-  return path;
+  // TODO: Smooth path here
+  return path.map(nodeIndex => nodes[nodeIndex]);
 };

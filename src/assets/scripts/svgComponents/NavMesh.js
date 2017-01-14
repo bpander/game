@@ -31,13 +31,14 @@ export default class NavMesh extends preact.Component {
             />
           ))}
         </g>
-        {points.map(point => (
-          <circle
-            cx={point[0]}
-            cy={point[1]}
-            r={4}
-            fill="orange"
-          />
+        {points.map((point, i) => (
+          <g transform={`translate(${point[0]}, ${point[1]})`}>
+            <circle
+              r={4}
+              fill="orange"
+            />
+            <text x="5" y="20" font-size="32">{i}</text>
+          </g>
         ))}
       </g>
     );

@@ -4,14 +4,13 @@ import preact from 'preact';
 export default class NavMesh extends preact.Component {
 
   onClick = (e) => {
-    const { triangles, points } = this.props.navMesh;
     const svg = e.currentTarget.ownerSVGElement;
     const svgRect = svg.getBoundingClientRect();
     const targetRect = e.currentTarget.getBoundingClientRect();
     const scale = svgRect.width / svg.viewBox.baseVal.width;
     const localX = e.clientX - svgRect.left - targetRect.left;
     const localY = e.clientY - svgRect.top - targetRect.top;
-    this.props.actions.moveSelectedTo(localX, localY);
+    this.props.actions.moveSelectedTo(localX / scale, localY / scale);
   };
 
   shouldComponentUpdate(nextProps, nextState) {

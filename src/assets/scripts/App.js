@@ -33,7 +33,7 @@ class App extends preact.Component {
     this.props.actions.addEntity({
       isSelected: true,
       path: [],
-      position: [-100, -100],
+      position: [100, 100],
       speed: 10, // grid squares per second
       state: 'idle',
     });
@@ -53,7 +53,7 @@ class App extends preact.Component {
     const { actions, entities, isNavMeshVisible, navMesh } = this.props;
     return (
       <div>
-        <SvgRenderer x="-200" y="-200" width="800" height="450">
+        <SvgRenderer x="0" y="0" width="800" height="450">
           {(isNavMeshVisible) && (
             <NavMesh navMesh={navMesh} actions={actions} />
           )}

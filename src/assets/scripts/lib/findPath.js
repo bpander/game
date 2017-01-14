@@ -1,4 +1,47 @@
 
+const down = [0, 1];
+
+const isOdd = n => n % 2 === 1;
+
+const isPointInPolygon = (point, polygon) => {
+  return isOdd(getCrossingNumber(point, down, polygon));
+};
+
+const isInRange = (n, range) => {
+  range.sort(); // ensure 0th is lower bound, 1st is upper bound.
+  return n >= range[0] && n < range[1];
+};
+
+const getCrossingNumber = (origin, direction, polygon) => {
+  const ray = [ origin, origin.map((n, i) => n + direction[i]) ];
+  const edges = [
+    [ polygon[0], polygon[1] ],
+    [ polygon[1], polygon[2] ],
+    [ polygon[2], polygon[0] ],
+  ];
+  return edges.reduce((n, edge) => {
+    const intersection = getIntersection(ray, edge);
+    const edgeXRange = edge.map(p => p[0]);
+    const doIntersect = isInRange(intersection[0], edgeXRange) && intersection[1] > ray[0][1];
+    return (doIntersect) ? n + 1 : n;
+  }, 0);
+};
+
+const getIntersection = (edge, otherEdge) => {
+  const x1 = edge[0][0];
+  const y1 = edge[0][1];
+  const x2 = edge[1][0];
+  const y2 = edge[1][1];
+  const x3 = otherEdge[0][0];
+  const y3 = otherEdge[0][1];
+  const x4 = otherEdge[1][0];
+  const y4 = otherEdge[1][1];
+  return [
+    ((x1*y2-y1*x2)*(x3-x4)-(x1-x2)*(x3*y4-y3*x4)) / ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4)),
+    ((x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4)) / ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4)),
+  ];
+};
+
 const getGScoreTo = (board, iStart, iFinal) => {
   const startXY = getXY(board, iStart);
   const finalXY = getXY(board, iFinal);
@@ -34,10 +77,14 @@ const getNeighbors = (board, i) => {
  * @param  {Vector2}  goal    The goal coordinate.
  * @return {Array<Vector2>}   An array of coordinates connecting the start with the goal.
  */
-export default function findPath(navMesh, [startX, startY], [finalX, finalY]) {
-  
-  const start = getIndex(board, startX, startY);
-  const final = getIndex(board, finalX, finalY);
+export default function findPath(navMesh, start, final) {
+  const { points, triangles } = navMesh;
+  const polygons = triangles.map(triangle => triangle.map(i => points[i]));
+  const startTriIndex = polygons.findIndex(polygon => isPointInPolygon(start, polygon));
+  const finalTriIndex = polygons.findIndex(polygon => isPointInPolygon(final, polygon));
+  console.log(polygons[startTriIndex]);
+  console.log(polygons[finalTriIndex]);
+  return;
   const closedSet = [];
   const openSet = [ start ];
   const cameFrom = [];

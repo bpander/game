@@ -1,29 +1,4 @@
 
-const getLowestIndex = arr => {
-  let currentMin = Infinity;
-  return arr.reduce((lowestIndex, value, i) => {
-    if (value < currentMin) {
-      currentMin = value;
-      return i;
-    }
-    return lowestIndex;
-  }, -1);
-};
-
-const getIndex = (board, x, y) => {
-  if (x < 0 || y < 0 || x >= board.width || y >= board.height) {
-    return;
-  }
-  return y * board.width + x;
-};
-
-const getXY = (board, i) => {
-  const { width } = board;
-  const y = i / width | 0;
-  const x = i - (y * width);
-  return [ x, y ];
-};
-
 const getGScoreTo = (board, iStart, iFinal) => {
   const startXY = getXY(board, iStart);
   const finalXY = getXY(board, iFinal);
@@ -59,13 +34,13 @@ const getNeighbors = (board, i) => {
  * @param  {Vector2}  goal    The goal coordinate.
  * @return {Array<Vector2>}   An array of coordinates connecting the start with the goal.
  */
-export default function findPath(board, [startX, startY], [finalX, finalY]) {
+export default function findPath(navMesh, [startX, startY], [finalX, finalY]) {
+  
   const start = getIndex(board, startX, startY);
   const final = getIndex(board, finalX, finalY);
   const closedSet = [];
   const openSet = [ start ];
   const cameFrom = [];
-  const gScoreComparator = (a, b) => gScore[a] - gScore[b];
 
   const gScore = Array(board.grid.length).fill(Infinity);
   gScore[start] = 0;

@@ -2,9 +2,9 @@ import preact from 'preact';
 import { connect } from 'preact-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from 'actions/actions';
-import Board from 'svgComponents/Board';
 import SvgRenderer from 'engine/SvgRenderer';
 import UiLayer from 'engine/UiLayer';
+import NavMesh from 'svgComponents/NavMesh';
 
 
 /**
@@ -17,7 +17,7 @@ class App extends preact.Component {
   static defaultProps = {
     board: null,
     entities: [],
-    size: 24,
+    isNavMeshVisible: true,
   };
 
   onAnimationFrame = timestamp => {
@@ -30,11 +30,10 @@ class App extends preact.Component {
   previousTimestamp = -1;
 
   componentDidMount() {
-    this.props.actions.fetchBoard('assets/media/maps/map_test.svg');
     this.props.actions.addEntity({
       isSelected: true,
       path: [],
-      position: [10, 1],
+      position: [-100, -100],
       speed: 10, // grid squares per second
       state: 'idle',
     });
@@ -51,18 +50,18 @@ class App extends preact.Component {
   }
 
   render() {
-    const { actions, board, entities, size } = this.props;
+    const { actions, entities, isNavMeshVisible, navMesh } = this.props;
     return (
       <div>
-        <SvgRenderer x="-20" y="-20" width="800" height="450">
-          {(board) && (
-            <Board size={size} {...board} actions={actions} />
+        <SvgRenderer x="-200" y="-200" width="800" height="450">
+          {(isNavMeshVisible) && (
+            <NavMesh navMesh={navMesh} actions={actions} />
           )}
           {entities.map(entity => (
             <circle
-              cx={size * entity.position[0]}
-              cy={size * entity.position[1]}
-              r={size / 2 * 0.8}
+              cx={entity.position[0]}
+              cy={entity.position[1]}
+              r={24}
               fill={(entity.state === 'walking') ? 'blue' : 'dodgerblue'}
             />
           ))}
@@ -75,7 +74,7 @@ class App extends preact.Component {
 }
 
 const mapStateToProps = state => ({
-  board: state.board,
+  navMesh: state.navMesh,
   entities: state.entities,
 });
 

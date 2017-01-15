@@ -57,31 +57,6 @@ const getIntersection = (edge, otherEdge) => {
   ];
 };
 
-const getGScoreTo = (board, iStart, iFinal) => {
-  const startXY = getXY(board, iStart);
-  const finalXY = getXY(board, iFinal);
-  return (startXY[1] - finalXY[1] === 0 || startXY[0] - finalXY[0] === 0) ? 10 : 14;
-
-};
-
-const getNeighbors = (board, i) => {
-  const { width } = board;
-  const neighbors = [];
-  const [ x, y ] = getXY(board, i);
-  for (let yi = -1; yi <= 1; yi++) {
-    for (let xi = -1; xi <= 1; xi++) {
-      if (xi === 0 && yi === 0) {
-        continue;
-      }
-      const neighbor = getIndex(board, x + xi, y + yi);
-      if (neighbor) {
-        neighbors.push(neighbor);
-      }
-    }
-  }
-  return neighbors;
-};
-
 const getDistance = (start, final) => {
   return Math.sqrt(
     Math.pow(final[0] - start[0], 2) + Math.pow(final[1] - start[1], 2)
@@ -167,7 +142,7 @@ export default function findPath(navMesh, start, final, heuristicFn = getManhatt
     }
   }
 
-  if (!cameFrom[finalPointIndex]) {
+  if (cameFrom[finalPointIndex] === undefined) {
     return null;
   }
   const pathNodeIndexes = [ finalPointIndex ];
@@ -178,16 +153,15 @@ export default function findPath(navMesh, start, final, heuristicFn = getManhatt
 
   const path = pathNodeIndexes.map(nodeIndex => nodes[nodeIndex]);
   const obstacles = navMesh.edges.slice(4).map(edge => edge.map(pointIndex => points[pointIndex]));
-  const smoothedPath = [ path[0] ];
   for (let i = 0; i < path.length; i++) {
     const waypoint = path[i + 2];
     if (waypoint === undefined) {
-      smoothedPath.push(path[i + 1]);
       break;
     }
-    if (!hasLineOfSight([ path[i], waypoint ], obstacles)) {
-      smoothedPath.push(path[i + 1]);
+    if (hasLineOfSight([ path[i], waypoint ], obstacles)) {
+      path.splice(i + 1, 1);
+      i--;
     }
   }
-  return smoothedPath;
+  return path;
 };

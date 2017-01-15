@@ -12,6 +12,21 @@ const isInRange = (n, range) => {
   return n >= range[0] && n < range[1];
 };
 
+const hasLineOfSight = (ray, edges) => {
+  const isBlocked = edges.some(edge => {
+    if (ray.includes(edge[0]) || ray.includes(edge[1])) {
+      return false;
+    }
+    const intersection = getIntersection(ray, edge);
+    const edgeXRange = edge.map(p => p[0]);
+    const edgeYRange = edge.map(p => p[1]);
+    const doIntersect = isInRange(intersection[0], edgeXRange)
+      && isInRange(intersection[1], edgeYRange);
+    return doIntersect;
+  });
+  return !isBlocked;
+};
+
 const getCrossingNumber = (origin, direction, polygon) => {
   const ray = [ origin, origin.map((n, i) => n + direction[i]) ];
   const edges = [
@@ -155,11 +170,24 @@ export default function findPath(navMesh, start, final, heuristicFn = getManhatt
   if (!cameFrom[finalPointIndex]) {
     return null;
   }
-  const path = [ finalPointIndex ];
+  const pathNodeIndexes = [ finalPointIndex ];
   let current = finalPointIndex;
   while ((current = cameFrom[current]) != null) {
-    path.unshift(current);
+    pathNodeIndexes.unshift(current);
   }
-  // TODO: Smooth path here
-  return path.map(nodeIndex => nodes[nodeIndex]);
+
+  const path = pathNodeIndexes.map(nodeIndex => nodes[nodeIndex]);
+  const obstacles = navMesh.edges.slice(4).map(edge => edge.map(pointIndex => points[pointIndex]));
+  const smoothedPath = [ path[0] ];
+  for (let i = 0; i < path.length; i++) {
+    const waypoint = path[i + 2];
+    if (waypoint === undefined) {
+      smoothedPath.push(path[i + 1]);
+      break;
+    }
+    if (!hasLineOfSight([ path[i], waypoint ], obstacles)) {
+      smoothedPath.push(path[i + 1]);
+    }
+  }
+  return smoothedPath;
 };

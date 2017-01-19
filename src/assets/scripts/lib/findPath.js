@@ -13,15 +13,18 @@ const isInRange = (n, range) => {
 };
 
 const hasLineOfSight = (ray, edges) => {
+  const threshold = 0.0001;
+  const rayLength = getDistance(ray[0], ray[1]);
   const isBlocked = edges.some(edge => {
     if (ray.includes(edge[0]) || ray.includes(edge[1])) {
       return false;
     }
     const intersection = getIntersection(ray, edge);
-    const edgeXRange = edge.map(p => p[0]);
-    const edgeYRange = edge.map(p => p[1]);
-    const doIntersect = isInRange(intersection[0], edgeXRange)
-      && isInRange(intersection[1], edgeYRange);
+    const edgeLength = getDistance(edge[0], edge[1]);
+    const edgeCrossProduct = getDistance(edge[0], intersection) + getDistance(edge[1], intersection);
+    const rayCrossProduct = getDistance(ray[0], intersection) + getDistance(ray[1], intersection);
+    const doIntersect = Math.abs(edgeLength - edgeCrossProduct) < threshold
+      && Math.abs(rayLength - rayCrossProduct) < threshold;
     return doIntersect;
   });
   return !isBlocked;

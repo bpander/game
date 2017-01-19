@@ -7,11 +7,6 @@ const isPointInPolygon = (point, polygon) => {
   return isOdd(getCrossingNumber(point, down, polygon));
 };
 
-const isInRange = (n, range) => {
-  range.sort(); // ensure 0th is lower bound, 1st is upper bound.
-  return n >= range[0] && n < range[1];
-};
-
 const hasLineOfSight = (ray, edges) => {
   const threshold = 0.0001;
   const rayLength = getDistance(ray[0], ray[1]);
@@ -31,6 +26,7 @@ const hasLineOfSight = (ray, edges) => {
 };
 
 const getCrossingNumber = (origin, direction, polygon) => {
+  const threshold = 0.0001;
   const ray = [ origin, origin.map((n, i) => n + direction[i]) ];
   const edges = [
     [ polygon[0], polygon[1] ],
@@ -38,9 +34,10 @@ const getCrossingNumber = (origin, direction, polygon) => {
     [ polygon[2], polygon[0] ],
   ];
   return edges.reduce((n, edge) => {
+    const edgeLength = getDistance(edge[0], edge[1]);
     const intersection = getIntersection(ray, edge);
-    const edgeXRange = edge.map(p => p[0]);
-    const doIntersect = isInRange(intersection[0], edgeXRange) && intersection[1] > ray[0][1];
+    const edgeCrossProduct = getDistance(edge[0], intersection) + getDistance(edge[1], intersection);
+    const doIntersect = Math.abs(edgeLength - edgeCrossProduct) < threshold && intersection[1] > ray[0][1];
     return (doIntersect) ? n + 1 : n;
   }, 0);
 };

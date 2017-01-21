@@ -7,20 +7,73 @@ const isPointInPolygon = (point, polygon) => {
   return isOdd(getCrossingNumber(point, down, polygon));
 };
 
-const hasLineOfSight = (ray, edges) => {
-  const threshold = 0.0001;
-  const rayLength = getDistance(ray[0], ray[1]);
-  const isBlocked = edges.some(edge => {
-    if (ray.includes(edge[0]) || ray.includes(edge[1])) {
-      return false;
-    }
-    const intersection = getIntersection(ray, edge);
-    const edgeLength = getDistance(edge[0], edge[1]);
-    const edgeCrossProduct = getDistance(edge[0], intersection) + getDistance(edge[1], intersection);
-    const rayCrossProduct = getDistance(ray[0], intersection) + getDistance(ray[1], intersection);
-    const doIntersect = Math.abs(edgeLength - edgeCrossProduct) < threshold
-      && Math.abs(rayLength - rayCrossProduct) < threshold;
-    return doIntersect;
+const isSamePoint = (p1, p2) => {
+  const threshold = 0.000001;
+  return Math.abs(p1[0] - p2[0]) < threshold
+    && Math.abs(p1[1] - p2[1]) < threshold;
+};
+
+const hasLineOfSight = (points, ray, obstacles) => {
+  const rayPoints = ray.map(pointIndex => points[pointIndex]);
+  const threshold = 0.00001;
+  const rayLength = getDistance(...rayPoints);
+  const isBlocked = obstacles.some(obstacle => {
+    const polygon = obstacle.map(pointIndex => points[pointIndex]);
+    return obstacle.some((startPointIndex, i) => {
+      const finalPointIndex = obstacle[(i + 1) % obstacle.length];
+      const edge = [ points[startPointIndex], points[finalPointIndex] ];
+      const intersection = getIntersection(rayPoints, edge);
+      if (isSamePoint(rayPoints[0], intersection)) {
+        return false;
+      }
+      const edgeLength = getDistance(...edge);
+      const edgeCrossProduct = getDistance(edge[0], intersection) + getDistance(edge[1], intersection);
+      const rayCrossProduct = getDistance(rayPoints[0], intersection) + getDistance(rayPoints[1], intersection);
+      const doIntersect = Math.abs(edgeLength - edgeCrossProduct) < threshold
+        && Math.abs(rayLength - rayCrossProduct) < threshold;
+      if (doIntersect) {
+        let triangle;
+        let hitIndex;
+        let rayFromCenter;
+        if (isSamePoint(edge[0], intersection)) {
+          triangle = [ obstacle[(i + obstacle.length - 1) % obstacle.length], startPointIndex, finalPointIndex ];
+          hitIndex = startPointIndex;
+
+        } else if (isSamePoint(edge[1], intersection)) {
+          triangle = [ startPointIndex, finalPointIndex, obstacle[(i + 2) % obstacle.length] ];
+          hitIndex = finalPointIndex;
+        }
+        if (triangle !== undefined) {
+          const triPoints = triangle.map(pointIndex => points[pointIndex]);
+          const angle1 = Math.atan2(
+            triPoints[0][1] * -1 - triPoints[1][1] * -1,
+            triPoints[0][0] - triPoints[1][0]
+          );
+          const angle1Normalize = (angle1 + Math.PI * 2) % (Math.PI * 2);
+          const angle2 = Math.atan2(
+            triPoints[2][1] * -1 - triPoints[1][1] * -1,
+            triPoints[2][0] - triPoints[1][0]
+          );
+          const angle2Normalize = (angle2 + Math.PI * 2) % (Math.PI * 2);
+          const rayFromCenter = ray.slice(0).sort((a, b) => (a !== hitIndex) ? 1 : -1);
+          const rayPointsFromCenter = rayFromCenter.map(pointIndex => points[pointIndex]);
+
+          let rayAngle = Math.atan2(
+            rayPointsFromCenter[1][1] * -1 - rayPointsFromCenter[0][1] * -1,
+            rayPointsFromCenter[1][0] - rayPointsFromCenter[0][0]
+          );
+          rayAngle = (rayAngle + Math.PI * 2) % (Math.PI * 2);
+          if (rayAngle <= angle1Normalize && rayAngle >= angle2Normalize) {
+            return false;
+          } else {
+            // debugger;
+            return true;
+          }
+        }
+        ray;
+      }
+      return doIntersect;
+    });
   });
   return !isBlocked;
 };
@@ -151,17 +204,17 @@ export default function findPath(navMesh, start, final, heuristicFn = getManhatt
     pathNodeIndexes.unshift(current);
   }
 
-  const path = pathNodeIndexes.map(nodeIndex => nodes[nodeIndex]);
-  const obstacles = navMesh.edges.slice(4).map(edge => edge.map(pointIndex => points[pointIndex]));
-  for (let i = 0; i < path.length; i++) {
-    const waypoint = path[i + 2];
+  console.log(pathNodeIndexes);
+  for (let i = 0; i < pathNodeIndexes.length; i++) {
+    const waypoint = pathNodeIndexes[i + 2];
     if (waypoint === undefined) {
       break;
     }
-    if (hasLineOfSight([ path[i], waypoint ], obstacles)) {
-      path.splice(i + 1, 1);
-      i--;
+    if (hasLineOfSight(nodes, [ pathNodeIndexes[i], waypoint ], navMesh.obstacles)) {
+      pathNodeIndexes.splice(i + 1, 1);
+      i = -1;
     }
   }
-  return path;
+
+  return pathNodeIndexes.map(pointIndex => nodes[pointIndex]);
 };

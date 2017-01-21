@@ -33,7 +33,7 @@ class App extends preact.Component {
     this.props.actions.addEntity({
       isSelected: true,
       path: [],
-      position: [100, 100],
+      position: [100, 50],
       speed: 500, // pixels per second
       state: 'idle',
     });

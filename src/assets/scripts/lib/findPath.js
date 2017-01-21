@@ -8,12 +8,12 @@ const getGScoreTo = (startV2, finalV2) => {
 };
 
 const reconstructPath = (cameFrom, current) => {
-  const totalPath = [ current ];
+  const path = [ current ];
   while (cameFrom[current] !== undefined) {
     current = cameFrom[current];
-    totalPath.unshift(current);
+    path.unshift(current);
   }
-  return totalPath;
+  return path;
 };
 
 /**
@@ -21,12 +21,24 @@ const reconstructPath = (cameFrom, current) => {
  * https://en.wikipedia.org/wiki/A*_search_algorithm#Pseudocode
  *
  * @function findPath
- * @param  {Object}   board   A board object.
- * @param  {Vector2}  start   The start coordinate.
- * @param  {Vector2}  final   The final coordinate.
- * @return {Array<Vector2>}   An array of coordinates connecting the start with the final.
+ * @param  {Object}   grid          A grid object (e.g. { width: 1, height: 1, data: [ 0 ] }).
+ * @param  {Array}    neighbors     An array of arrays which indicates which cells are walkable
+ *                                  from which cells.
+ * @param  {Vector2}  startV2       The start coordinate.
+ * @param  {Vector2}  finalV2       The goal coordinate.
+ * @param  {Function} [heuristicFn] A function that takes two arguments (a start Vector2, and a
+ *                                  goal Vector2) and should return a number indicating the
+ *                                  estimated cost to traverse between them.
+ * @return {Array<Number>}  An array of indexes (that reference grid.data) that connect the start
+ *                          point with the final point.
  */
-export default function findPath(grid, neighbors, startV2, finalV2, heuristicFn = getManhattanDistance) {
+export default function findPath(
+  grid,
+  neighbors,
+  startV2,
+  finalV2,
+  heuristicFn = getManhattanDistance
+) {
   const start = getIndex(grid, startV2);
   const final = getIndex(grid, finalV2);
   const closedSet = [];

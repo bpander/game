@@ -34,6 +34,7 @@ class App extends preact.Component {
       isSelected: true,
       path: [],
       position: [10, 1],
+      radius: 0.4,
       speed: 10, // grid squares per second
       state: 'idle',
     });
@@ -61,7 +62,7 @@ class App extends preact.Component {
             <circle
               cx={size * entity.position[0]}
               cy={size * entity.position[1]}
-              r={size / 2 * 0.8}
+              r={size * entity.radius}
               fill={(entity.state === 'walking') ? 'blue' : 'dodgerblue'}
             />
           ))}

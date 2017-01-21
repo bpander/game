@@ -1,5 +1,4 @@
 import { getIndex, getV2, isWalkable } from 'lib/grid';
-import lerp from 'lib/lerp';
 
 
 const hasLineOfSight = (grid, start, final) => {
@@ -11,6 +10,7 @@ const hasLineOfSight = (grid, start, final) => {
   if (deltaX === 0) {
     const x = startV2[0];
     for (let y = yMin; y <= yMax; y++) {
+      // TODO: Check to make sure we're not cutting across a corner
       if (!isWalkable(grid, getIndex(grid, [x, y]))) {
         return false;
       }
@@ -44,7 +44,6 @@ export default function smoothPath (grid, path) {
     return { ...map, [index]: path[i + 1] };
   }, {});
   while (next[currentPoint] !== undefined) {
-    debugger;
     if (hasLineOfSight(grid, checkPoint, next[currentPoint])) {
       const temp = currentPoint;
       currentPoint = next[currentPoint];

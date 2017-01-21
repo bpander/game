@@ -15,7 +15,7 @@ import UiLayer from 'engine/UiLayer';
 class App extends preact.Component {
 
   static defaultProps = {
-    board: null,
+    board: undefined,
     entities: [],
     size: 24,
   };
@@ -30,7 +30,6 @@ class App extends preact.Component {
   previousTimestamp = -1;
 
   componentDidMount() {
-    this.props.actions.fetchBoard('assets/media/maps/map_test.svg');
     this.props.actions.addEntity({
       isSelected: true,
       path: [],
@@ -56,7 +55,7 @@ class App extends preact.Component {
       <div>
         <SvgRenderer x="-20" y="-20" width="800" height="450">
           {(board) && (
-            <Board size={size} {...board} actions={actions} />
+            <Board size={size} grid={board.grid} actions={actions} />
           )}
           {entities.map(entity => (
             <circle

@@ -1,52 +1,19 @@
+import { getManhattanDistance, getIndex, getV2 } from 'lib/grid';
 
-const getLowestIndex = arr => {
-  let currentMin = Infinity;
-  return arr.reduce((lowestIndex, value, i) => {
-    if (value < currentMin) {
-      currentMin = value;
-      return i;
-    }
-    return lowestIndex;
-  }, -1);
+
+const getGScoreTo = (startV2, finalV2) => {
+  const [ startX, startY ] = startV2;
+  const [ finalX, finalY ] = finalV2;
+  return (finalY - startY === 0 || finalX - startX === 0) ? 10 : 14;
 };
 
-const getIndex = (board, x, y) => {
-  if (x < 0 || y < 0 || x > board.width || y > board.height) {
-    return;
+const reconstructPath = (cameFrom, current) => {
+  const totalPath = [ current ];
+  while (cameFrom[current] !== undefined) {
+    current = cameFrom[current];
+    totalPath.push(current);
   }
-  return y * board.width + x;
-};
-
-const getXY = (board, i) => {
-  const { width } = board;
-  const y = i / width | 0;
-  const x = i - (y * width);
-  return [ x, y ];
-};
-
-const getGScoreTo = (board, iStart, iFinal) => {
-  const startXY = getXY(board, iStart);
-  const finalXY = getXY(board, iFinal);
-  return (startXY[1] - finalXY[1] === 0 || startXY[0] - finalXY[0] === 0) ? 10 : 14;
-
-};
-
-const getNeighbors = (board, i) => {
-  const { width } = board;
-  const neighbors = [];
-  const [ x, y ] = getXY(board, i);
-  for (let yi = -1; yi <= 1; yi++) {
-    for (let xi = -1; xi <= 1; xi++) {
-      if (xi === 0 && yi === 0) {
-        continue;
-      }
-      const neighbor = getIndex(board, x + xi, y + yi);
-      if (neighbor) {
-        neighbors.push(neighbor);
-      }
-    }
-  }
-  return neighbors;
+  return totalPath;
 };
 
 /**
@@ -56,48 +23,56 @@ const getNeighbors = (board, i) => {
  * @function findPath
  * @param  {Object}   board   A board object.
  * @param  {Vector2}  start   The start coordinate.
- * @param  {Vector2}  goal    The goal coordinate.
- * @return {Array<Vector2>}   An array of coordinates connecting the start with the goal.
+ * @param  {Vector2}  final   The final coordinate.
+ * @return {Array<Vector2>}   An array of coordinates connecting the start with the final.
  */
-export default function findPath(board, [startX, startY], [finalX, finalY]) {
-  const start = getIndex(board, startX, startY);
-  const final = getIndex(board, finalX, finalY);
+export default function findPath(grid, neighbors, startV2, finalV2, heuristicFn = getManhattanDistance) {
+  const start = getIndex(grid, startV2);
+  const final = getIndex(grid, finalV2);
   const closedSet = [];
   const openSet = [ start ];
-  const cameFrom = [];
-  const gScoreComparator = (a, b) => gScore[a] - gScore[b];
+  const cameFrom = {};
 
-  const gScore = Array(board.grid.length).fill(Infinity);
+  const gScore = Array(grid.data.length).fill(Infinity);
   gScore[start] = 0;
 
+  const fScore = Array(grid.data.length).fill(Infinity);
+  fScore[start] = heuristicFn(startV2, finalV2);
+
+  const fScoreComparator = (a, b) => fScore[a] - fScore[b];
+
   while (openSet.length > 0) {
-    const current = openSet.sort(gScoreComparator)[0];
+    const current = openSet.sort(fScoreComparator)[0];
     if (current === final) {
-      break;
+      return reconstructPath(cameFrom, current);
     }
+
     openSet.splice(openSet.indexOf(current), 1);
     closedSet.push(current);
-    getNeighbors(board, current).forEach(neighbor => {
-      const isWalkable = board.grid[neighbor] > 0; // TODO: Use a bitmask
-      if (!isWalkable || closedSet.includes(neighbor)) {
-        return;
+
+    const currentV2 = getV2(current);
+    neighbors[current].forEach(neighbor => {
+      if (closedSet.includes(neighbor)) {
+        return; // Ignore the neighbor which is already evaluated.
       }
 
-      const tentativeGScore = getGScoreTo(board, current, neighbor);
+      // The distance from start to a neighbor
+      const neighborV2 = getV2(grid, neighbor);
+      const tentativeGScore = gScore[current] + getGScoreTo(currentV2, neighborV2);
+
+      // Discover a new node
       if (!openSet.includes(neighbor)) {
         openSet.push(neighbor);
+
+      // This is not a better path.
       } else if (tentativeGScore >= gScore[neighbor]) {
         return;
       }
+
+      // This path is the best until now. Record it!
       cameFrom[neighbor] = current;
       gScore[neighbor] = tentativeGScore;
+      fScore[neighbor] = gScore[neighbor] + heuristicFn(neighborV2, finalV2);
     });
   }
-
-  const path = [ getXY(board, final) ];
-  let current = final;
-  while ((current = cameFrom[current]) != null) {
-    path.unshift(getXY(board, current));
-  }
-  return path;
 };

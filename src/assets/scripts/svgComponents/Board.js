@@ -1,4 +1,5 @@
 import preact from 'preact';
+import { makeGrid } from 'lib/grid';
 import Grid from 'svgComponents/Grid';
 
 
@@ -7,9 +8,7 @@ export default class Board extends preact.Component {
   static defaultProps = {
     x: 0,
     y: 0,
-    width: 1,
-    height: 1,
-    grid: [ 0 ],
+    grid: makeGrid([1, 1]),
     size: 1,
     isDirty: false,
   };
@@ -34,13 +33,14 @@ export default class Board extends preact.Component {
 
   render() {
     console.log('Board#render');
-    const { x, y, width, height, grid, size } = this.props;
+    const { x, y, grid, size } = this.props;
+    const { width, height } = grid;
     const offset = size / 2 * -1;
 
     return (
       <g transform={`translate(${x + offset}, ${y + offset})`}>
         <g opacity="0.2">
-          {grid.map((cell, i) => {
+          {grid.data.map((cell, i) => {
             if (cell < 1) {
               return;
             }

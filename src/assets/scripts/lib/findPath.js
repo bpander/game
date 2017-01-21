@@ -11,7 +11,7 @@ const reconstructPath = (cameFrom, current) => {
   const totalPath = [ current ];
   while (cameFrom[current] !== undefined) {
     current = cameFrom[current];
-    totalPath.push(current);
+    totalPath.unshift(current);
   }
   return totalPath;
 };
@@ -50,7 +50,7 @@ export default function findPath(grid, neighbors, startV2, finalV2, heuristicFn 
     openSet.splice(openSet.indexOf(current), 1);
     closedSet.push(current);
 
-    const currentV2 = getV2(current);
+    const currentV2 = getV2(grid, current);
     neighbors[current].forEach(neighbor => {
       if (closedSet.includes(neighbor)) {
         return; // Ignore the neighbor which is already evaluated.

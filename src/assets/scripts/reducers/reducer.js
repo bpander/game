@@ -23,7 +23,7 @@ const reducer = (state = initialState, action) => {
         const { position } = entity;
         const { grid, neighbors } = state.board;
         const start = position.map(Math.floor);
-        entity.path = findPath(grid, neighbors, start, action.position).map(i => getV2(grid, i)).reverse();
+        entity.path = findPath(grid, neighbors, start, action.position).map(i => getV2(grid, i));
         entity.state = 'walking';
       });
       break;

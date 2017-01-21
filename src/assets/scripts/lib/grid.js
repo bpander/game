@@ -1,4 +1,9 @@
 
+
+export const addVectors = (vA, vB) => {
+  return vA.map((mag, i) => mag + vB[i]);
+};
+
 export const fillRect = (grid, startV2, sizeV2, fillValue) => {
   const { data } = grid;
   const [ x, y ] = startV2;
@@ -29,24 +34,44 @@ export const getManhattanDistance = (startV2, finalV2) => {
 };
 
 export const getNeighbors = (grid, i) => {
-  const { data, width } = grid;
+  const { data } = grid;
   if (data[i] === Infinity) {
     return;
   }
-  const neighbors = [];
-  const [ x, y ] = getV2(grid, i);
-  for (let yi = -1; yi <= 1; yi++) {
-    for (let xi = -1; xi <= 1; xi++) {
-      if (xi === 0 && yi === 0) {
-        continue;
-      }
-      const neighbor = getIndex(grid, [ x + xi, y + yi ]);
-      if (neighbor && data[neighbor] < Infinity) {
-        neighbors.push(neighbor);
-      }
+  const v2 = getV2(grid, i);
+
+  // Get orthoganal neighbors
+  const star = [
+    [ 1,  0],
+    [ 0,  1],
+    [-1,  0],
+    [ 0, -1],
+  ].map(transform => getIndex(grid, addVectors(v2, transform)));
+
+  // Get diagonal neighbors
+  const square = [
+    [ 1,  1],
+    [-1,  1],
+    [-1, -1],
+    [ 1, -1],
+  ].map(transform => getIndex(grid, addVectors(v2, transform)));
+
+  // Generate walkability data
+  const starWalkability = star.map(neighborIndex => isWalkable(grid, neighborIndex));
+  const squareWalkability = square.map((neighborIndex, i) => {
+    const next = (i + 1) % star.length;
+    const isNeighborWalkable = isWalkable(grid, neighborIndex);
+    if (isNeighborWalkable) {
+      // Don't allow diagonals to cut corners
+      return starWalkability[i] && starWalkability[next];
     }
-  }
-  return neighbors;
+    return false;
+  });
+
+  // Merge the walkable orthogonal neighbors with the walkable diagonal neighbors
+  const starNeighbors = star.filter((neighborIndex, i) => starWalkability[i]);
+  const squareNeighbors = square.filter((neighborIndex, i) => squareWalkability[i]);
+  return [ ...starNeighbors, ...squareNeighbors ];
 };
 
 export const getV2 = (grid, i) => {
@@ -54,6 +79,10 @@ export const getV2 = (grid, i) => {
   const y = i / width | 0;
   const x = i - (y * width);
   return [ x, y ];
+};
+
+export const isWalkable = (grid, i) => {
+  return i !== undefined && grid.data[i] < Infinity;
 };
 
 export const makeGrid = (sizeV2, fillValue = 0) => {

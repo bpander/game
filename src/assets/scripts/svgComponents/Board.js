@@ -10,7 +10,6 @@ export default class Board extends preact.Component {
     y: 0,
     grid: makeGrid([1, 1]),
     size: 1,
-    isDirty: false,
   };
 
   onClick = e => {
@@ -28,7 +27,7 @@ export default class Board extends preact.Component {
   };
 
   shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.isDirty;
+    return nextProps.grid !== this.props.grid;
   }
 
   render() {

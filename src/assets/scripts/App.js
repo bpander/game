@@ -30,6 +30,16 @@ class App extends preact.Component {
   previousTimestamp = -1;
 
   componentDidMount() {
+    this.props.actions.placeStructure({
+      type: 'stockpile',
+      position: [ 1, 1 ],
+      size: [ 4, 4 ],
+    });
+    this.props.actions.placeStructure({
+      type: 'farm',
+      position: [ 7, 1 ],
+      size: [ 3, 3 ],
+    });
     this.props.actions.addEntity({
       isSelected: true,
       path: [],

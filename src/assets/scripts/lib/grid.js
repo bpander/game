@@ -1,3 +1,4 @@
+import { WALKABLE } from 'constants/TerrainTypes';
 
 
 export const addVectors = (vA, vB) => {
@@ -18,7 +19,7 @@ export const fillRect = (grid, startV2, sizeV2, fillValue) => {
       data[rowStart + xi] = fillValue;
     }
   }
-  return grid;
+  return { ...grid };
 };
 
 export const getIndex = (grid, v2) => {
@@ -35,7 +36,7 @@ export const getManhattanDistance = (startV2, finalV2) => {
 
 export const getNeighbors = (grid, i) => {
   const { data } = grid;
-  if (data[i] === Infinity) {
+  if (!isWalkable(grid, i)) {
     return;
   }
   const v2 = getV2(grid, i);
@@ -82,7 +83,7 @@ export const getV2 = (grid, i) => {
 };
 
 export const isWalkable = (grid, i) => {
-  return i !== undefined && grid.data[i] < Infinity;
+  return grid.data[i] & WALKABLE;
 };
 
 export const makeGrid = (sizeV2, fillValue = 0) => {

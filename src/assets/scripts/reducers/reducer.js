@@ -42,7 +42,7 @@ const reducer = (state = initialState, action) => {
     case ActionTypes.PLACE_STRUCTURE:
       const { structure } = action;
       const { grid } = state.board;
-      state.board.grid = fillRect(grid, structure.position, structure.size, ~WALKABLE);
+      state.board.grid = fillRect(grid, structure.position, structure.size, structure.footprint);
 
       // Bake the neighbors array
       // TODO: This could be memoized

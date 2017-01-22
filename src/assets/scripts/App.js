@@ -2,9 +2,11 @@ import preact from 'preact';
 import { connect } from 'preact-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from 'actions/actions';
-import Board from 'svgComponents/Board';
+import * as StructureTypes from 'constants/StructureTypes';
 import SvgRenderer from 'engine/SvgRenderer';
 import UiLayer from 'engine/UiLayer';
+import createStructure from 'factories/createStructure';
+import Board from 'svgComponents/Board';
 
 
 /**
@@ -30,16 +32,18 @@ class App extends preact.Component {
   previousTimestamp = -1;
 
   componentDidMount() {
-    this.props.actions.placeStructure({
-      type: 'stockpile',
+    this.props.actions.placeStructure(createStructure(StructureTypes.STOCKPILE, {
       position: [ 1, 1 ],
-      size: [ 4, 4 ],
-    });
-    this.props.actions.placeStructure({
-      type: 'farm',
+    }));
+    this.props.actions.placeStructure(createStructure(StructureTypes.FARM, {
       position: [ 7, 1 ],
-      size: [ 3, 3 ],
-    });
+    }));
+    this.props.actions.placeStructure(createStructure(StructureTypes.NURSERY, {
+      position: [ 10, 10 ],
+    }));
+    this.props.actions.placeStructure(createStructure(StructureTypes.NURSERY, {
+      position: [ 20, 3 ],
+    }));
     this.props.actions.addEntity({
       isSelected: true,
       path: [],

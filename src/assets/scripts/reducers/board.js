@@ -1,11 +1,10 @@
 import * as ActionTypes from 'constants/ActionTypes';
 import * as TerrainTypes from 'constants/TerrainTypes';
-import { fillRect, getNeighbors, makeGrid } from 'lib/grid';
+import { makeGrid } from 'lib/grid';
 
 
-const grid = makeGrid([ 40, 20 ], TerrainTypes.WALKABLE | TerrainTypes.BUILDABLE);
 const initialState = {
-  grid,
+  grid: makeGrid([ 40, 20 ], TerrainTypes.WALKABLE | TerrainTypes.BUILDABLE),
   neighbors: [],
 };
 

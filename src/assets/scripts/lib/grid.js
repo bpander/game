@@ -5,7 +5,7 @@ export const addVectors = (vA, vB) => {
   return vA.map((mag, i) => mag + vB[i]);
 };
 
-export const fillRect = (grid, startV2, sizeV2, fillValue) => {
+export const fillRect = (grid, startV2, sizeV2, fillValues) => {
   const { data } = grid;
   const [ x, y ] = startV2;
   const [ w, h ] = sizeV2;
@@ -13,10 +13,11 @@ export const fillRect = (grid, startV2, sizeV2, fillValue) => {
   const right = x + w;
   const bottom = y + h;
   const left = x;
+  let i = 0;
   for (let yi = top; yi < bottom; yi++) {
     const rowStart = yi * grid.width;
     for (let xi = left; xi < right; xi++) {
-      data[rowStart + xi] = fillValue;
+      data[rowStart + xi] = fillValues[i++];
     }
   }
   return { ...grid };

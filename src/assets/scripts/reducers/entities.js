@@ -1,10 +1,6 @@
 import * as ActionTypes from 'constants/ActionTypes';
 
 
-const clamp = function(n, min, max) {
-  return Math.min(Math.max(n, min), max);
-};
-
 const entities = (state = [], action) => {
   switch (action.type) {
 
@@ -15,9 +11,7 @@ const entities = (state = [], action) => {
     case ActionTypes.STEP:
       return state.map(entity => {
         if (entity.state === 'walking') {
-          const sec = action.ms / 1000;
-          entity.v = clamp(entity.v + entity.acceleration * sec, 0, entity.maxV);
-          const v = entity.v * sec;
+          const v = entity.speed * (action.ms / 1000);
           const { path, position } = entity;
           const target = path[0];
           const deltaX = target[0] - position[0];
@@ -27,7 +21,6 @@ const entities = (state = [], action) => {
             path.splice(0, 1);
             entity.position = [ ...target ];
             if (path.length === 0) {
-              entity.v = 0;
               entity.state = 'idle';
             }
             return entity;

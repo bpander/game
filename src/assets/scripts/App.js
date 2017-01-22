@@ -31,13 +31,11 @@ class App extends preact.Component {
 
   componentDidMount() {
     this.props.actions.addEntity({
-      acceleration: 10,
       isSelected: true,
-      maxV: 10, // grid squares per second
       path: [],
       position: [10, 1],
-      v: 0,
       radius: 0.4,
+      speed: 10, // grid squares per second
       state: 'idle',
     });
     this.step();

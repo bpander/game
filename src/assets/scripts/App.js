@@ -17,7 +17,7 @@ class App extends preact.Component {
   static defaultProps = {
     board: undefined,
     entities: [],
-    size: 24,
+    size: 32,
   };
 
   onAnimationFrame = timestamp => {

@@ -23,7 +23,7 @@ export const fillRect = (grid, startV2, sizeV2, fillValue) => {
 
 export const getIndex = (grid, v2) => {
   const [ x, y ] = v2;
-  if (x < 0 || y < 0 || x > grid.width || y > grid.height) {
+  if (x < 0 || y < 0 || x >= grid.width || y >= grid.height) {
     return;
   }
   return y * grid.width + x;

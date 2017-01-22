@@ -2,7 +2,7 @@ import * as ActionTypes from 'constants/ActionTypes';
 import { fillRect, getNeighbors, makeGrid } from 'lib/grid';
 
 
-const grid = makeGrid([ 25, 20 ], 0);
+const grid = makeGrid([ 40, 20 ], 0);
 const initialState = {
   grid,
   neighbors: [],

@@ -6,6 +6,7 @@ import { getV2 } from 'lib/grid';
 import board from 'reducers/board';
 import entities from 'reducers/entities';
 
+
 const initialState = {
   board: undefined,
   entities: [],
@@ -25,7 +26,7 @@ const reducer = (state = initialState, action) => {
         const { grid, neighbors } = state.board;
         const start = position.map(Math.floor);
         const path = findPath(grid, neighbors, start, action.position);
-        entity.path = smoothPath(grid, path, entity.radius).map(i => getV2(grid, i));
+        entity.path = smoothPath(grid, path).map(i => getV2(grid, i));
         entity.state = 'walking';
       });
       break;

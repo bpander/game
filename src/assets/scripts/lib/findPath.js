@@ -29,6 +29,7 @@ const reconstructPath = (cameFrom, current) => {
  * @param  {Function} [heuristicFn] A function that takes two arguments (a start Vector2, and a
  *                                  goal Vector2) and should return a number indicating the
  *                                  estimated cost to traverse between them.
+ * @param   {Number}  [weight=50]
  * @return {Array<Number>}  An array of indexes (that reference grid.data) that connect the start
  *                          point with the final point.
  */
@@ -37,7 +38,8 @@ export default function findPath(
   neighbors,
   startV2,
   finalV2,
-  heuristicFn = getManhattanDistance
+  heuristicFn = getManhattanDistance,
+  weight = 50
 ) {
   const start = getIndex(grid, startV2);
   const final = getIndex(grid, finalV2);
@@ -84,7 +86,7 @@ export default function findPath(
       // This path is the best until now. Record it!
       cameFrom[neighbor] = current;
       gScore[neighbor] = tentativeGScore;
-      fScore[neighbor] = gScore[neighbor] + heuristicFn(neighborV2, finalV2);
+      fScore[neighbor] = gScore[neighbor] + heuristicFn(neighborV2, finalV2) * weight;
     });
   }
 };

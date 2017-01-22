@@ -2,9 +2,11 @@ import preact from 'preact';
 import { connect } from 'preact-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from 'actions/actions';
+import * as EntityTypes from 'constants/EntityTypes';
 import * as StructureTypes from 'constants/StructureTypes';
 import SvgRenderer from 'engine/SvgRenderer';
 import UiLayer from 'engine/UiLayer';
+import createEntity from 'factories/createEntity';
 import createStructure from 'factories/createStructure';
 import Board from 'svgComponents/Board';
 
@@ -44,14 +46,7 @@ class App extends preact.Component {
     this.props.actions.placeStructure(createStructure(StructureTypes.NURSERY, {
       position: [ 20, 3 ],
     }));
-    this.props.actions.addEntity({
-      isSelected: true,
-      path: [],
-      position: [10, 1],
-      radius: 0.4,
-      speed: 10, // grid squares per second
-      state: 'idle',
-    });
+    this.props.actions.addEntity(createEntity(EntityTypes.FARMER));
     this.step();
   }
 

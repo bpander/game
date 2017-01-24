@@ -34,7 +34,8 @@ const reducer = (state = initialState, action) => {
           entity.state = 'idle';
           return;
         }
-        entity.path = smoothPath(grid, path).map(i => getV2(grid, i));
+        const [ falseStart, ...rest ] = smoothPath(grid, path).map(i => getV2(grid, i));
+        entity.path = [ entity.position, ...rest ];
         entity.state = 'walking';
       });
       break;

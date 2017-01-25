@@ -8,6 +8,7 @@ import SvgRenderer from 'engine/SvgRenderer';
 import UiLayer from 'engine/UiLayer';
 import createEntity from 'factories/createEntity';
 import createStructure from 'factories/createStructure';
+import addWheelListener from 'lib/addWheelListener';
 import Board from 'svgComponents/Board';
 
 
@@ -24,16 +25,41 @@ class App extends preact.Component {
     size: 24,
   };
 
+  state = {
+    width: document.documentElement.clientWidth,
+    height: document.documentElement.clientHeight,
+    x: 0,
+    y: 0,
+  };
+
   onAnimationFrame = timestamp => {
     this.step(timestamp - this.previousTimestamp);
     this.previousTimestamp = timestamp;
+  };
+
+  onMouseWheel = e => {
+    e.preventDefault();
+    this.setState({
+      x: this.state.x - e.wheelDeltaX * this.scrollSpeed,
+      y: this.state.y - e.wheelDeltaY * this.scrollSpeed,
+    });
+  };
+
+  onResize = () => {
+    this.setState({
+      width: document.documentElement.clientWidth,
+      height: document.documentElement.clientHeight,
+    });
   };
 
   afRequestId = -1;
 
   previousTimestamp = -1;
 
+  scrollSpeed = 0.2;
+
   componentDidMount() {
+    // Place some stuff for testing
     this.props.actions.placeStructure(createStructure(StructureTypes.STOCKPILE, {
       position: [ 1, 1 ],
     }));
@@ -47,6 +73,12 @@ class App extends preact.Component {
       position: [ 20, 3 ],
     }));
     this.props.actions.addEntity(createEntity(EntityTypes.FARMER));
+
+    // Bind events
+    window.addEventListener('resize', this.onResize);
+    addWheelListener(document.body, this.onMouseWheel);
+
+    // Start!
     this.step();
   }
 
@@ -61,9 +93,10 @@ class App extends preact.Component {
 
   render() {
     const { actions, board, entities, size } = this.props;
+    const { width, height, x, y } = this.state;
     return (
       <div>
-        <SvgRenderer x="-20" y="-20" width="800" height="450">
+        <SvgRenderer x={x} y={y} width={width} height={height}>
           {(board) && (
             <Board size={size} grid={board.grid} actions={actions} />
           )}

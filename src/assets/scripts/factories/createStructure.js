@@ -27,9 +27,9 @@ export const templates = {
     ],
   },
 
-  [StructureTypes.NURSERY]: {
-    type: StructureTypes.NURSERY,
-    displayName: 'Nursery',
+  [StructureTypes.HOUSE]: {
+    type: StructureTypes.HOUSE,
+    displayName: 'House',
     size: [ 5, 5 ],
     footprint: [
       0, 0, 0, 0, 0,

@@ -1,5 +1,5 @@
 
 export const NONE = 'NONE';
 export const FARM = 'FARM';
-export const NURSERY = 'NURSERY';
+export const HOUSE = 'HOUSE';
 export const STOCKPILE = 'STOCKPILE';

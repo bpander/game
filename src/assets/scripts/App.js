@@ -82,10 +82,10 @@ class App extends preact.Component {
     this.props.actions.placeStructure(createStructure(StructureTypes.FARM, {
       position: [ 7, 1 ],
     }));
-    this.props.actions.placeStructure(createStructure(StructureTypes.NURSERY, {
+    this.props.actions.placeStructure(createStructure(StructureTypes.HOUSE, {
       position: [ 10, 10 ],
     }));
-    this.props.actions.placeStructure(createStructure(StructureTypes.NURSERY, {
+    this.props.actions.placeStructure(createStructure(StructureTypes.HOUSE, {
       position: [ 20, 3 ],
     }));
     this.props.actions.addEntity(createEntity(EntityTypes.FARMER, { position: [ 10, 2 ] }));

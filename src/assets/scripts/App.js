@@ -7,7 +7,7 @@ import * as StructureTypes from 'constants/StructureTypes';
 import SvgRenderer from 'engine/SvgRenderer';
 import UiLayer from 'engine/UiLayer';
 import createEntity from 'factories/createEntity';
-import createStructure from 'factories/createStructure';
+import createStructure, { templates } from 'factories/createStructure';
 import addWheelListener from 'lib/addWheelListener';
 import Board from 'svgComponents/Board';
 
@@ -52,6 +52,13 @@ class App extends preact.Component {
     });
   };
 
+  onStructureMenuChange = e => {
+    const template = templates[e.target.value];
+    if (template) {
+      this.props.actions.planStructure(templates[e.target.value]);
+    }
+  };
+
   afRequestId = -1;
 
   previousTimestamp = -1;
@@ -72,7 +79,7 @@ class App extends preact.Component {
     this.props.actions.placeStructure(createStructure(StructureTypes.NURSERY, {
       position: [ 20, 3 ],
     }));
-    this.props.actions.addEntity(createEntity(EntityTypes.FARMER));
+    this.props.actions.addEntity(createEntity(EntityTypes.FARMER, { position: [ 10, 2 ] }));
 
     // Bind events
     window.addEventListener('resize', this.onResize);
@@ -110,6 +117,14 @@ class App extends preact.Component {
           ))}
         </SvgRenderer>
         <UiLayer>
+          <div>
+            <select onChange={this.onStructureMenuChange}>
+              <option>Choose structure</option>
+              {Object.keys(templates).map(key => (
+                <option value={key}>{templates[key].displayName}</option>
+              ))}
+            </select>
+          </div>
         </UiLayer>
       </div>
     );
@@ -129,4 +144,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(App);
-

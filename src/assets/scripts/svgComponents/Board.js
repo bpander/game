@@ -1,5 +1,7 @@
 import preact from 'preact';
+import * as ControlModes from 'constants/ControlModes';
 import { makeGrid } from 'lib/grid';
+import createStructure from 'factories/createStructure';
 import Grid from 'svgComponents/Grid';
 
 
@@ -12,8 +14,12 @@ export default class Board extends preact.Component {
     size: 1,
   };
 
+  state = {
+    plannedStructure: null,
+  };
+
   onClick = e => {
-    const { size } = this.props;
+    const { size, user } = this.props;
     const svg = e.currentTarget.ownerSVGElement;
     const svgRect = svg.getBoundingClientRect();
     const targetRect = e.currentTarget.getBoundingClientRect();
@@ -23,16 +29,44 @@ export default class Board extends preact.Component {
     const scaledSize = size * scale;
     const gridX = localX / scaledSize | 0;
     const gridY = localY / scaledSize | 0;
-    this.props.actions.moveSelectedTo(gridX, gridY);
+
+    if (user.controlMode === ControlModes.PLAN_STRUCTURE) {
+      const structure = createStructure(user.target, { position: [ gridX, gridY ] });
+      this.props.actions.placeStructure(structure);
+    } else {
+      this.props.actions.moveSelectedTo(gridX, gridY);
+    }
+  };
+
+  onMouseMove = e => {
+    const { size, user } = this.props;
+    const svg = e.currentTarget.ownerSVGElement;
+    const svgRect = svg.getBoundingClientRect();
+    const targetRect = e.currentTarget.getBoundingClientRect();
+    const scale = svgRect.width / svg.viewBox.baseVal.width;
+    const localX = e.clientX - svgRect.left - targetRect.left;
+    const localY = e.clientY - svgRect.top - targetRect.top;
+    const scaledSize = size * scale;
+    const gridX = localX / scaledSize | 0;
+    const gridY = localY / scaledSize | 0;
+
+    if (user.controlMode === ControlModes.PLAN_STRUCTURE) {
+      this.setState({
+        plannedStructure: createStructure(user.target, { position: [ gridX, gridY ] }),
+      });
+    }
   };
 
   shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.grid !== this.props.grid;
+    return nextProps.grid !== this.props.grid
+      || nextProps.user.controlMode !== this.props.user.controlMode
+      || nextState.plannedStructure !== this.state.plannedStructure;
   }
 
   render() {
     console.log('Board#render');
-    const { x, y, grid, size } = this.props;
+    const { x, y, grid, size, user } = this.props;
+    const { plannedStructure } = this.state;
     const { width, height } = grid;
     const offset = size / 2 * -1;
 
@@ -57,7 +91,24 @@ export default class Board extends preact.Component {
           })}
         </g>
         <Grid width={width} height={height} size={size} />
-        <rect opacity="0" width={width * size} height={height * size} onClick={this.onClick} />
+        {(user.controlMode === ControlModes.PLAN_STRUCTURE && plannedStructure != null) && (
+          <rect
+            x={size * plannedStructure.position[0]}
+            y={size * plannedStructure.position[1]}
+            width={size * plannedStructure.size[0]}
+            height={size * plannedStructure.size[1]}
+            fill="none"
+            stroke="black"
+            style="box-shadow: 0 0 5px red"
+          />
+        )}
+        <rect
+          opacity="0"
+          width={width * size}
+          height={height * size}
+          onClick={this.onClick}
+          onMouseMove={this.onMouseMove}
+        />
       </g>
     );
   }

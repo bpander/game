@@ -8,7 +8,7 @@ const entityBase = {
   isSelected: true,
   maxHp: 1,
   hp: 1,
-  radius: 0.4,
+  radius: 0.2,
   speed: 10,
   state: 'idle',
 };

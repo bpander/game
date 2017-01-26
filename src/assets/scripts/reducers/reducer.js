@@ -7,18 +7,21 @@ import { fillRect, getNeighbors, getV2 } from 'lib/grid';
 import board from 'reducers/board';
 import entities from 'reducers/entities';
 import structures from 'reducers/structures';
+import user from 'reducers/user';
 
 
 const initialState = {
   board: undefined,
   entities: [],
   structures: [],
+  user: undefined,
 };
 
 const combined = combineReducers({
   board,
   entities,
   structures,
+  user,
 });
 
 const reducer = (state = initialState, action) => {

@@ -9,4 +9,6 @@ export const planStructure = structure => ({ type: ActionTypes.PLAN_STRUCTURE, s
 
 export const placeStructure = structure => ({ type: ActionTypes.PLACE_STRUCTURE, structure });
 
+export const setControlMode = controlMode => ({ type: ActionTypes.SET_CONTROL_MODE, controlMode });
+
 export const step = ms => ({ type: ActionTypes.STEP, ms });

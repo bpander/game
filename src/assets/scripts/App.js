@@ -2,6 +2,7 @@ import preact from 'preact';
 import { connect } from 'preact-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from 'actions/actions';
+import * as ControlModes from 'constants/ControlModes';
 import * as EntityTypes from 'constants/EntityTypes';
 import * as StructureTypes from 'constants/StructureTypes';
 import SvgRenderer from 'engine/SvgRenderer';
@@ -52,10 +53,18 @@ class App extends preact.Component {
     });
   };
 
+  onKeyUp = e => {
+    if (e.code === 'Escape') {
+      this.props.actions.setControlMode(ControlModes.DEFAULT);
+    }
+  };
+
   onStructureMenuChange = e => {
     const template = templates[e.target.value];
     if (template) {
-      this.props.actions.planStructure(templates[e.target.value]);
+      this.props.actions.planStructure(e.target.value);
+    } else {
+      this.props.actions.setControlMode(ControlModes.DEFAULT);
     }
   };
 
@@ -82,6 +91,7 @@ class App extends preact.Component {
     this.props.actions.addEntity(createEntity(EntityTypes.FARMER, { position: [ 10, 2 ] }));
 
     // Bind events
+    window.addEventListener('keyup', this.onKeyUp);
     window.addEventListener('resize', this.onResize);
     addWheelListener(document.body, this.onMouseWheel);
 
@@ -99,13 +109,13 @@ class App extends preact.Component {
   }
 
   render() {
-    const { actions, board, entities, size } = this.props;
+    const { actions, board, entities, size, user } = this.props;
     const { width, height, x, y } = this.state;
     return (
       <div>
         <SvgRenderer x={x} y={y} width={width} height={height}>
           {(board) && (
-            <Board size={size} grid={board.grid} actions={actions} />
+            <Board size={size} grid={board.grid} user={user} actions={actions} />
           )}
           {entities.map(entity => (
             <circle
@@ -134,6 +144,7 @@ class App extends preact.Component {
 const mapStateToProps = state => ({
   board: state.board,
   entities: state.entities,
+  user: state.user,
 });
 
 const mapDispatchToProps = dispatch => ({

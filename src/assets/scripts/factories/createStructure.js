@@ -5,6 +5,7 @@ const [ W, B ] = [ WALKABLE, BUILDABLE ];
 
 const structureBase = {
   type: StructureTypes.NONE,
+  cost: 0,
   displayName: '',
   position: [ 0, 0 ],
   size: [ 2, 2 ],
@@ -16,8 +17,23 @@ const structureBase = {
 
 export const templates = {
 
+  [StructureTypes.COLD_STORAGE]: {
+    type: StructureTypes.COLD_STORAGE,
+    cost: 20,
+    displayName: 'Cold storage',
+    size: [ 4, 5 ],
+    footprint: [
+      0, 0, 0, 0,
+      0, W, W, 0,
+      0, W, W, W,
+      0, W, W, 0,
+      0, 0, 0, 0,
+    ],
+  },
+
   [StructureTypes.FARM]: {
     type: StructureTypes.FARM,
+    cost: 10,
     displayName: 'Farm',
     size: [ 3, 3 ],
     footprint: [
@@ -29,6 +45,7 @@ export const templates = {
 
   [StructureTypes.HOUSE]: {
     type: StructureTypes.HOUSE,
+    cost: 30,
     displayName: 'House',
     size: [ 5, 5 ],
     footprint: [
@@ -42,6 +59,7 @@ export const templates = {
 
   [StructureTypes.STOCKPILE]: {
     type: StructureTypes.STOCKPILE,
+    cost: 10,
     displayName: 'Stockpile',
     size: [ 4, 4 ],
     footprint: [

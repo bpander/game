@@ -4,6 +4,8 @@ import * as ControlModes from 'constants/ControlModes';
 
 const initialState = {
   controlMode: ControlModes.DEFAULT,
+  scrap: 1000,
+  food: 100,
 };
 
 const structures = (state = initialState, action) => {
@@ -15,6 +17,10 @@ const structures = (state = initialState, action) => {
     case ActionTypes.PLAN_STRUCTURE:
       state.controlMode = ControlModes.PLAN_STRUCTURE;
       state.target = action.structure;
+      return state;
+
+    case ActionTypes.PLACE_STRUCTURE:
+      state.scrap = state.scrap - action.structure.cost;
       return state;
 
   }

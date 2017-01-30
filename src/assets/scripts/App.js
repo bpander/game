@@ -129,10 +129,24 @@ class App extends preact.Component {
             <select onChange={this.onStructureMenuChange}>
               <option>Choose structure</option>
               {Object.keys(templates).map(key => (
-                <option value={key}>{templates[key].displayName}</option>
+                <option value={key}>
+                  {templates[key].displayName}
+                  {` - `}
+                  ({templates[key].cost} scrap)
+                </option>
               ))}
             </select>
           </div>
+          <table className="table">
+            <tr>
+              <th className="table__header">Food</th>
+              <td className="table__data">{user.food}</td>
+            </tr>
+            <tr>
+              <th className="table__header">Scrap</th>
+              <td className="table__data">{user.scrap}</td>
+            </tr>
+          </table>
         </UiLayer>
       </div>
     );

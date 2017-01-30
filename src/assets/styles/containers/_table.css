@@ -1,0 +1,10 @@
+.table {
+
+}
+
+.table__header,
+.table__data {
+  border: 1px solid #999999;
+  padding: 5px;
+  text-align: left;
+}

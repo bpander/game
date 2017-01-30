@@ -12,7 +12,7 @@ import user from 'reducers/user';
 
 const initialState = {
   board: undefined,
-  entities: [],
+  entities: undefined,
   structures: [],
   user: undefined,
 };

@@ -7,7 +7,6 @@ import * as EntityTypes from 'constants/EntityTypes';
 import * as StructureTypes from 'constants/StructureTypes';
 import SvgRenderer from 'engine/SvgRenderer';
 import UiLayer from 'engine/UiLayer';
-import createEntity from 'factories/createEntity';
 import createStructure, { templates } from 'factories/createStructure';
 import addWheelListener from 'lib/addWheelListener';
 import Board from 'svgComponents/Board';
@@ -88,7 +87,6 @@ class App extends preact.Component {
     this.props.actions.placeStructure(createStructure(StructureTypes.HOUSE, {
       position: [ 20, 3 ],
     }));
-    this.props.actions.addEntity(createEntity(EntityTypes.FARMER, { position: [ 10, 2 ] }));
 
     // Bind events
     window.addEventListener('keyup', this.onKeyUp);

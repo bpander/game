@@ -1,7 +1,15 @@
 import * as ActionTypes from 'constants/ActionTypes';
+import * as EntityTypes from 'constants/EntityTypes';
+import createEntity from 'factories/createEntity';
 
 
-const entities = (state = [], action) => {
+const initialState = [
+  createEntity(EntityTypes.FARMER, { position: [ 0, 2 ] }),
+  // createEntity(EntityTypes.NONE, { position: [ 10, 15 ] }),
+  // createEntity(EntityTypes.NONE, { position: [ 0, 2 ] }),
+];
+
+const entities = (state = initialState, action) => {
   switch (action.type) {
 
     case ActionTypes.ADD_ENTITY:

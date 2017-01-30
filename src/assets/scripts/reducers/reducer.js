@@ -42,6 +42,9 @@ const reducer = (state = initialState, action) => {
           if (!entity.structure) {
             structure.workers.push(entity.uuid);
             entity.structure = structure.uuid;
+            if (structure.workers.length < structure.maxWorkers) {
+              continue entityLoop;
+            }
             continue structureLoop;
           }
         }

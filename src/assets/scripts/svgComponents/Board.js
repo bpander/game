@@ -32,7 +32,7 @@ export default class Board extends preact.Component {
     const gridY = localY / scaledSize;
 
     if (user.controlMode === ControlModes.PLAN_STRUCTURE) {
-      const structure = createStructure(user.target, { position: [ gridX, gridY ] });
+      const structure = createStructure(user.target, { position: [ gridX, gridY ].map(Math.round) });
       this.props.actions.placeStructure(structure);
     } else {
       this.props.actions.moveSelectedTo(gridX, gridY);

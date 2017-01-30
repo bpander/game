@@ -24,11 +24,12 @@ export default class Board extends preact.Component {
     const svgRect = svg.getBoundingClientRect();
     const targetRect = e.currentTarget.getBoundingClientRect();
     const scale = svgRect.width / svg.viewBox.baseVal.width;
-    const localX = e.clientX - svgRect.left - targetRect.left;
-    const localY = e.clientY - svgRect.top - targetRect.top;
+    const offset = size * -0.5;
+    const localX = e.clientX - svgRect.left - targetRect.left + offset;
+    const localY = e.clientY - svgRect.top - targetRect.top + offset;
     const scaledSize = size * scale;
-    const gridX = localX / scaledSize | 0;
-    const gridY = localY / scaledSize | 0;
+    const gridX = localX / scaledSize;
+    const gridY = localY / scaledSize;
 
     if (user.controlMode === ControlModes.PLAN_STRUCTURE) {
       const structure = createStructure(user.target, { position: [ gridX, gridY ] });

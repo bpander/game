@@ -31,14 +31,15 @@ const reducer = (state = initialState, action) => {
       state.entities.filter(entity => entity.isSelected).forEach(entity => {
         const { position } = entity;
         const { grid, neighbors } = state.board;
-        const start = position.map(Math.floor);
-        const path = findPath(grid, neighbors, start, action.position);
+        const start = position.map(Math.round);
+        const final = action.position.map(Math.round);
+        const path = findPath(grid, neighbors, start, final);
         if (path == null) {
           entity.state = 'idle';
           return;
         }
-        const [ falseStart, ...rest ] = smoothPath(grid, path).map(i => getV2(grid, i));
-        entity.path = [ entity.position, ...rest ];
+        const smoothedPath = smoothPath(grid, path).map(i => getV2(grid, i));
+        entity.path = [ entity.position, ...smoothedPath.slice(1, -1), action.position ];
         entity.state = 'walking';
       });
       break;

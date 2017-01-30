@@ -4,3 +4,7 @@
 body {
   font-family: sans-serif;
 }
+
+svg text {
+  pointer-events: none;
+}

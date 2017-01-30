@@ -107,8 +107,9 @@ class App extends preact.Component {
   }
 
   render() {
-    const { actions, board, entities, size, user } = this.props;
+    const { actions, board, entities, size, structures, user } = this.props;
     const { width, height, x, y } = this.state;
+    const offset = -0.5 * size;
     return (
       <div>
         <SvgRenderer x={x} y={y} width={width} height={height}>
@@ -123,6 +124,22 @@ class App extends preact.Component {
               fill={(entity.state === 'walking') ? 'blue' : 'dodgerblue'}
             />
           ))}
+          {structures.map(structure => (
+            <g transform={`translate(${structure.position.map(p => p * size + offset).join()})`}>
+              <rect
+                stroke="orange"
+                fill="none"
+                width={size * structure.size[0]}
+                height={size * structure.size[1]}
+              />
+              <text
+                alignment-baseline="middle"
+                text-anchor="middle"
+                x={size * structure.size[0] / 2}
+                y={size * structure.size[1] / 2}
+                opacity="0.3">{structure.displayName}</text>
+            </g>
+          ))}
         </SvgRenderer>
         <UiLayer>
           <div>
@@ -132,7 +149,7 @@ class App extends preact.Component {
                 <option value={key}>
                   {templates[key].displayName}
                   {` - `}
-                  ({templates[key].cost} scrap)
+                  ({templates[key].cost} steel)
                 </option>
               ))}
             </select>
@@ -143,8 +160,8 @@ class App extends preact.Component {
               <td className="table__data">{user.food}</td>
             </tr>
             <tr>
-              <th className="table__header">Scrap</th>
-              <td className="table__data">{user.scrap}</td>
+              <th className="table__header">Steel</th>
+              <td className="table__data">{user.steel}</td>
             </tr>
           </table>
         </UiLayer>
@@ -156,6 +173,7 @@ class App extends preact.Component {
 const mapStateToProps = state => ({
   board: state.board,
   entities: state.entities,
+  structures: state.structures,
   user: state.user,
 });
 

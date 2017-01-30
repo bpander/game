@@ -83,7 +83,7 @@ export default function createStructure(structureType, overrides) {
   return {
     ...structureBase,
     ...templates[structureType],
-    ...{ uuid: uuidV4() },
+    ...{ uuid: uuidV4(), workers: [] },
     ...overrides,
   };
 };

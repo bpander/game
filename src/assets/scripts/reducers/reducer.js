@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import * as ActionTypes from 'constants/ActionTypes.js';
-import { WALKABLE } from 'constants/TerrainTypes.js';
+import * as EntityTypes from 'constants/EntityTypes';
 import findPath from 'lib/findPath';
 import smoothPath from 'lib/smoothPath';
 import { fillRect, getNeighbors, getV2 } from 'lib/grid';
@@ -26,6 +26,29 @@ const combined = combineReducers({
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+
+    case ActionTypes.ASSIGN_UNASSIGNED_ENTITIES: {
+      const { entities, structures } = state;
+      let j = 0;
+      structureLoop:
+      for (let i = 0; i < structures.length; i++) {
+        const structure = structures[i];
+        if (!structure.isWorkable || structure.workers.length >= structure.maxWorkers) {
+          continue structureLoop;
+        }
+        entityLoop:
+        for (j; j < entities.length; j++) {
+          const entity = entities[j];
+          if (!entity.structure) {
+            structure.workers.push(entity.uuid);
+            entity.structure = structure.uuid;
+            continue structureLoop;
+          }
+        }
+        break structureLoop;
+      }
+      break;
+    }
 
     case ActionTypes.MOVE_SELECTED_TO: {
       state.entities.filter(entity => entity.isSelected).forEach(entity => {

@@ -4,9 +4,9 @@ import createEntity from 'factories/createEntity';
 
 
 const initialState = [
-  createEntity(EntityTypes.FARMER, { position: [ 0, 2 ] }),
-  // createEntity(EntityTypes.NONE, { position: [ 10, 15 ] }),
-  // createEntity(EntityTypes.NONE, { position: [ 0, 2 ] }),
+  createEntity(EntityTypes.NONE, { position: [ 10.1, 2.2 ] }),
+  createEntity(EntityTypes.NONE, { position: [ 10.5, 3.1 ] }),
+  createEntity(EntityTypes.NONE, { position: [ 11.1, 2.8 ] }),
 ];
 
 const entities = (state = initialState, action) => {

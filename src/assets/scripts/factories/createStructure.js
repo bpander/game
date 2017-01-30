@@ -1,3 +1,4 @@
+import uuidV4 from 'uuid/v4';
 import { WALKABLE, BUILDABLE } from 'constants/TerrainTypes';
 import * as StructureTypes from 'constants/StructureTypes';
 
@@ -13,6 +14,10 @@ const structureBase = {
     0, W,
     W, W,
   ],
+
+  isWorkable: false,
+  workers: [],
+  maxWorkers: 0,
 };
 
 export const templates = {
@@ -31,16 +36,18 @@ export const templates = {
     ],
   },
 
-  [StructureTypes.FARM]: {
-    type: StructureTypes.FARM,
+  [StructureTypes.POTATO_PLANTS]: {
+    type: StructureTypes.POTATO_PLANTS,
     cost: 10,
-    displayName: 'Farm',
+    displayName: 'Potato plants',
     size: [ 3, 3 ],
     footprint: [
-      W, W, W,
       W, 0, W,
-      W, W, W,
+      W, 0, W,
+      W, 0, W,
     ],
+    isWorkable: true,
+    maxWorkers: 1,
   },
 
   [StructureTypes.HOUSE]: {
@@ -76,6 +83,7 @@ export default function createStructure(structureType, overrides) {
   return {
     ...structureBase,
     ...templates[structureType],
+    ...{ uuid: uuidV4() },
     ...overrides,
   };
 };

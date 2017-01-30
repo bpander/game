@@ -1,3 +1,3 @@
 
-export const NONE = 'NONE';
-export const FARMER = 'FARMER';
+export const NONE = 0;
+export const FARMER = 1;

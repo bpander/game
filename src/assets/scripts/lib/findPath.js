@@ -1,3 +1,4 @@
+import Heap from 'heap';
 import { getManhattanDistance, getIndex, getV2 } from 'lib/grid';
 
 
@@ -44,7 +45,6 @@ export default function findPath(
   const start = getIndex(grid, startV2);
   const final = getIndex(grid, finalV2);
   const closedSet = [];
-  const openSet = [ start ];
   const cameFrom = {};
 
   const gScore = Array(grid.data.length).fill(Infinity);
@@ -53,15 +53,15 @@ export default function findPath(
   const fScore = Array(grid.data.length).fill(Infinity);
   fScore[start] = heuristicFn(startV2, finalV2);
 
-  const fScoreComparator = (a, b) => fScore[a] - fScore[b];
+  const openSet = new Heap((a, b) => fScore[a] - fScore[b]);
+  openSet.push(start);
 
-  while (openSet.length > 0) {
-    const current = openSet.sort(fScoreComparator)[0];
+  while (!openSet.empty()) {
+    const current = openSet.pop();
     if (current === final) {
       return reconstructPath(cameFrom, current);
     }
 
-    openSet.splice(openSet.indexOf(current), 1);
     closedSet.push(current);
 
     const currentV2 = getV2(grid, current);
@@ -75,7 +75,7 @@ export default function findPath(
       const tentativeGScore = gScore[current] + getGScoreTo(currentV2, neighborV2);
 
       // Discover a new node
-      if (!openSet.includes(neighbor)) {
+      if (!openSet.nodes.includes(neighbor)) {
         openSet.push(neighbor);
 
       // This is not a better path.
@@ -87,6 +87,7 @@ export default function findPath(
       cameFrom[neighbor] = current;
       gScore[neighbor] = tentativeGScore;
       fScore[neighbor] = gScore[neighbor] + heuristicFn(neighborV2, finalV2) * weight;
+      openSet.updateItem(neighbor);
     });
   }
 };

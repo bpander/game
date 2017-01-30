@@ -4,10 +4,9 @@ import { bindActionCreators } from 'redux';
 import * as actions from 'actions/actions';
 import * as ControlModes from 'constants/ControlModes';
 import * as EntityTypes from 'constants/EntityTypes';
-import * as StructureTypes from 'constants/StructureTypes';
 import SvgRenderer from 'engine/SvgRenderer';
 import UiLayer from 'engine/UiLayer';
-import createStructure, { templates } from 'factories/createStructure';
+import { templates } from 'factories/createStructure';
 import addWheelListener from 'lib/addWheelListener';
 import Board from 'svgComponents/Board';
 
@@ -28,8 +27,8 @@ class App extends preact.Component {
   state = {
     width: document.documentElement.clientWidth,
     height: document.documentElement.clientHeight,
-    x: 0,
-    y: 0,
+    x: -30,
+    y: -30,
   };
 
   onAnimationFrame = timestamp => {
@@ -74,26 +73,13 @@ class App extends preact.Component {
   scrollSpeed = 0.2;
 
   componentDidMount() {
-    // Place some stuff for testing
-    this.props.actions.placeStructure(createStructure(StructureTypes.STOCKPILE, {
-      position: [ 1, 1 ],
-    }));
-    this.props.actions.placeStructure(createStructure(StructureTypes.FARM, {
-      position: [ 7, 1 ],
-    }));
-    this.props.actions.placeStructure(createStructure(StructureTypes.HOUSE, {
-      position: [ 10, 10 ],
-    }));
-    this.props.actions.placeStructure(createStructure(StructureTypes.HOUSE, {
-      position: [ 20, 3 ],
-    }));
-
     // Bind events
     window.addEventListener('keyup', this.onKeyUp);
     window.addEventListener('resize', this.onResize);
     addWheelListener(document.body, this.onMouseWheel);
 
     // Start!
+    this.props.actions.start();
     this.step();
   }
 

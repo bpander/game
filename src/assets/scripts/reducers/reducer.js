@@ -27,7 +27,7 @@ const combined = combineReducers({
 const reducer = (state = initialState, action) => {
   switch (action.type) {
 
-    case ActionTypes.MOVE_SELECTED_TO:
+    case ActionTypes.MOVE_SELECTED_TO: {
       state.entities.filter(entity => entity.isSelected).forEach(entity => {
         const { position } = entity;
         const { grid, neighbors } = state.board;
@@ -43,8 +43,9 @@ const reducer = (state = initialState, action) => {
         entity.state = 'walking';
       });
       break;
+    }
 
-    case ActionTypes.PLACE_STRUCTURE:
+    case ActionTypes.PLACE_STRUCTURE: {
       const { structure } = action;
       const { grid } = state.board;
       state.board.grid = fillRect(grid, structure.position, structure.size, structure.footprint);
@@ -53,6 +54,17 @@ const reducer = (state = initialState, action) => {
       // TODO: This could be memoized
       state.board.neighbors = grid.data.map((d, i) => getNeighbors(grid, i));
       break;
+    }
+
+    case ActionTypes.START: {
+      const { grid } = state.board;
+      state.structures.forEach(structure => {
+        state.board.grid = fillRect(grid, structure.position, structure.size, structure.footprint);
+      });
+      // TODO: This could be memoized
+      state.board.neighbors = grid.data.map((d, i) => getNeighbors(grid, i));
+      break;
+    }
 
   }
   return combined(state, action);

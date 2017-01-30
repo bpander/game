@@ -11,4 +11,6 @@ export const placeStructure = structure => ({ type: ActionTypes.PLACE_STRUCTURE,
 
 export const setControlMode = controlMode => ({ type: ActionTypes.SET_CONTROL_MODE, controlMode });
 
+export const start = () => ({ type: ActionTypes.START });
+
 export const step = ms => ({ type: ActionTypes.STEP, ms });

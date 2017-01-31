@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import * as ActionTypes from 'constants/ActionTypes.js';
 import * as EntityTypes from 'constants/EntityTypes';
 import findPath from 'lib/findPath';
+import reactToWorld from 'lib/reactToWorld';
 import smoothPath from 'lib/smoothPath';
 import { fillRect, getNeighbors, getV2 } from 'lib/grid';
 import board from 'reducers/board';
@@ -90,6 +91,10 @@ const reducer = (state = initialState, action) => {
       // TODO: This could be memoized
       state.board.neighbors = grid.data.map((d, i) => getNeighbors(grid, i));
       break;
+    }
+
+    case ActionTypes.STEP: {
+      state.entities.forEach(entity => reactToWorld(entity, state, action.ms));
     }
 
   }

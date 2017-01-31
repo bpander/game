@@ -13,6 +13,7 @@ const entityBase = {
   speed: 10,
   state: 'idle',
   structure: null,
+  task: null,
 };
 
 const templates = {

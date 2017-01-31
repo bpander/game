@@ -1,8 +1,8 @@
 import uuidV4 from 'uuid/v4';
-import { WALKABLE, BUILDABLE } from 'constants/TerrainTypes';
+import * as TerrainTypes from 'constants/TerrainTypes';
 import * as StructureTypes from 'constants/StructureTypes';
 
-const [ W, B ] = [ WALKABLE, BUILDABLE ];
+const [ W, B ] = [ TerrainTypes.WALKABLE, TerrainTypes.BUILDABLE ];
 
 const structureBase = {
   type: StructureTypes.NONE,
@@ -40,11 +40,11 @@ export const templates = {
     type: StructureTypes.POTATO_PLANTS,
     cost: 10,
     displayName: 'Potato plants',
-    size: [ 3, 3 ],
+    size: [ 2, 3 ],
     footprint: [
-      W, 0, W,
-      W, 0, W,
-      W, 0, W,
+      W, 0,
+      W, 0,
+      W, 0,
     ],
     isWorkable: true,
     maxWorkers: 2,

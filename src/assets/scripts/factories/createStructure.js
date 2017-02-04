@@ -47,7 +47,7 @@ export const templates = {
       W, 0,
     ],
     isWorkable: true,
-    maxWorkers: 2,
+    maxWorkers: 1,
   },
 
   [StructureTypes.HOUSE]: {

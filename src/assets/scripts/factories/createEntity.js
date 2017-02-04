@@ -1,5 +1,6 @@
 import uuidV4 from 'uuid/v4';
 import * as EntityTypes from 'constants/EntityTypes';
+import * as TaskTypes from 'constants/TaskTypes';
 
 
 const entityBase = {
@@ -13,7 +14,7 @@ const entityBase = {
   speed: 10,
   state: 'idle',
   structure: null,
-  task: null,
+  task: TaskTypes.NONE,
 };
 
 const templates = {

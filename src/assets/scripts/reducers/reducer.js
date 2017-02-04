@@ -95,6 +95,7 @@ const reducer = (state = initialState, action) => {
 
     case ActionTypes.STEP: {
       state.entities.forEach(entity => reactToWorld(entity, state, action.ms));
+      break;
     }
 
   }

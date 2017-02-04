@@ -5,6 +5,10 @@ body {
   font-family: sans-serif;
 }
 
+body, select {
+  font-size: 20px;
+}
+
 svg text {
   pointer-events: none;
 }

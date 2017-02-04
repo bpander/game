@@ -15,6 +15,7 @@ const entityBase = {
   state: 'idle',
   structure: null,
   task: TaskTypes.NONE,
+  progress: 0,
 };
 
 const templates = {

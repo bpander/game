@@ -9,6 +9,7 @@ import UiLayer from 'engine/UiLayer';
 import { templates } from 'factories/createStructure';
 import addWheelListener from 'lib/addWheelListener';
 import Board from 'svgComponents/Board';
+import Entity from 'svgComponents/Entity';
 
 
 /**
@@ -102,14 +103,7 @@ class App extends preact.Component {
           {(board) && (
             <Board size={size} grid={board.grid} user={user} actions={actions} />
           )}
-          {entities.map(entity => (
-            <circle
-              cx={size * entity.position[0]}
-              cy={size * entity.position[1]}
-              r={size * entity.radius}
-              fill={(entity.state === 'walking') ? 'blue' : 'dodgerblue'}
-            />
-          ))}
+          {entities.map(entity => <Entity entity={entity} size={size} />)}
           {structures.map(structure => (
             <g transform={`translate(${structure.position.map(p => p * size + offset).join()})`}>
               <rect

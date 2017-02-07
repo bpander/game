@@ -1,0 +1,1 @@
+{"version":3,"sources":["_ui.css"],"names":[],"mappings":"AACA,IACE,SAAA,SACA,IAAA,EACA,MAAA,EACA,OAAA,EACA,KAAA,EACA,eAAA,KAGF,cACE,eAAA","file":"_ui.css","sourcesContent":["\n.ui {\n  position: absolute;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  pointer-events: none;\n}\n\n.ui__elements {\n  pointer-events: auto;\n}\n"],"sourceRoot":"/source/"}
